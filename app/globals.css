@@ -1,26 +1,104 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f0f9ff; /* Tailwind sky-50 */
+  --foreground: #0f172a; /* Slate 900 */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-fredoka), system-ui, -apple-system, sans-serif;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-fredoka), system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
 }
+
+/* Custom interactive animation for buttons to look tactile and responsive */
+.btn-tactile {
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-tactile:active {
+  transform: scale(0.92) translateY(2px);
+}
+
+/* Gentle keyframe animations to guide visual attention */
+@keyframes soft-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 12px rgba(34, 197, 94, 0);
+  }
+}
+
+.pulse-action {
+  animation: soft-pulse 2s infinite ease-in-out;
+}
+
+@keyframes letter-pop {
+  0% {
+    transform: scale(1);
+    color: inherit;
+  }
+  50% {
+    transform: scale(1.4) translateY(-6px);
+    color: #10B981; /* Emerald 500 */
+    text-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+  }
+  100% {
+    transform: scale(1);
+    color: inherit;
+  }
+}
+
+.letter-active {
+  display: inline-block;
+  animation: letter-pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+/* Custom outline focus rings for keyboard accessibility */
+*:focus-visible {
+  outline: 4px solid #3B82F6;
+  outline-offset: 4px;
+}
+
+/* Slide in animation for overlays */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Confetti floating effect */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-20px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.animate-confetti {
+  animation: confetti-fall 4s linear infinite;
+}
+
