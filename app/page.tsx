@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   Brain,
@@ -57,7 +58,7 @@ export default function DashboardPage() {
       title: "KOGNITIF",
       desc: "Belajar Warna, Bentuk & Angka",
       bg: "bg-purple-400 hover:bg-purple-500 border-purple-600",
-      icon: <Brain className="w-10 h-10 text-white" />,
+      icon: '/icons/kognitif.jpg',
       tts: "Latihan Kognitif. Ayo pilih warna, bentuk, atau angka!"
     },
     {
@@ -66,7 +67,7 @@ export default function DashboardPage() {
       title: "MOTORIK HALUS",
       desc: "Menjiplak, Menyentuh & Menyeret",
       bg: "bg-emerald-500 hover:bg-emerald-600 border-emerald-700",
-      icon: <Hand className="w-10 h-10 text-white" />,
+      icon: '/icons/motorik.jpg',
       tts: "Latihan Motorik. Ayo menjiplak kupu-kupu, bermain balon, atau menata keranjang!"
     },
     {
@@ -75,7 +76,7 @@ export default function DashboardPage() {
       title: "VIDEO CERITA",
       desc: "Cerita Interaktif & Senam Jari",
       bg: "bg-rose-500 hover:bg-rose-600 border-rose-700",
-      icon: <Tv className="w-10 h-10 text-white" />,
+      icon: '/icons/video.jpg',
       tts: "Video Belajar. Tonton cerita kognitif atau senam jari!"
     },
     {
@@ -84,7 +85,7 @@ export default function DashboardPage() {
       title: "MENGEJA KATA",
       desc: "Eja Huruf-Huruf Bergambar",
       bg: "bg-pink-400 hover:bg-pink-500 border-pink-600",
-      icon: <Volume2 className="w-10 h-10 text-white" />,
+      icon: '/icons/mengeja-kata.jpg',
       tts: "Ayo mengeja kata benda!"
     },
     {
@@ -93,7 +94,7 @@ export default function DashboardPage() {
       title: "KUIS PINTAR",
       desc: "Uji Pemahaman Bentuk & Warna",
       bg: "bg-amber-400 hover:bg-amber-500 border-amber-600",
-      icon: <Trophy className="w-10 h-10 text-white" />,
+      icon: '/icons/kuis.jpg',
       tts: "Ayo kerjakan kuis bintang pintar!"
     },
     {
@@ -102,7 +103,7 @@ export default function DashboardPage() {
       title: "TEBAK SUARA",
       desc: "Mencocokkan Suara Hewan",
       bg: "bg-indigo-500 hover:bg-indigo-600 border-indigo-700",
-      icon: <MessageCircle className="w-10 h-10 text-white" />,
+      icon: '/icons/tebak-suara.jpg',
       tts: "Mari tebak suara hewan!"
     },
     {
@@ -111,7 +112,7 @@ export default function DashboardPage() {
       title: "TEBAK GAMBAR",
       desc: "Cari Gambar yang Tepat",
       bg: "bg-teal-400 hover:bg-teal-500 border-teal-600",
-      icon: <Star className="w-10 h-10 text-white" />,
+      icon: '/icons/tebak-gambar.jpg',
       tts: "Ayo tebak gambar benda!"
     },
     {
@@ -120,7 +121,7 @@ export default function DashboardPage() {
       title: "PROFIL KU",
       desc: "Ubah Nama & Karakter Hewan",
       bg: "bg-white hover:bg-slate-50 border-4 border-sky-100 border-b-8 border-sky-200",
-      icon: <User className="w-10 h-10 text-sky-600" />,
+      icon: '/icons/profile.jpg',
       tts: "Pengaturan profil teman belajar",
       isWhite: true
     },
@@ -130,7 +131,7 @@ export default function DashboardPage() {
       title: "PRESTASI KU",
       desc: "Checklist Koleksi Bintang Pintar",
       bg: "bg-white hover:bg-slate-50 border-4 border-sky-100 border-b-8 border-sky-200",
-      icon: <BarChart3 className="w-10 h-10 text-sky-600" />,
+      icon: '/icons/prestasi.jpg',
       tts: "Lihat koleksi bintang prestasimu!",
       isWhite: true
     }
@@ -178,26 +179,31 @@ export default function DashboardPage() {
                 playSynth("bubble");
                 speak(card.tts);
               }}
-              className={`btn-tactile rounded-4xl p-6 text-left flex flex-col justify-between min-h-60 shadow-md cursor-pointer transition-all hover:-translate-y-1 ${
-                card.isWhite
-                  ? "bg-white hover:bg-slate-50 border-4 border-sky-100 border-b-8"
-                  : card.bg
-              }`}
+              className={`btn-tactile rounded-4xl p-6 text-left flex flex-col justify-between min-h-60 shadow-md cursor-pointer transition-all hover:-translate-y-1 ${card.isWhite
+                ? "bg-white hover:bg-slate-50 border-4 border-sky-100 border-b-8"
+                : card.bg
+                }`}
             >
-              <div className={`p-4 rounded-2xl w-16 h-16 flex items-center justify-center mb-4 ${
-                card.isWhite ? "bg-sky-50 border border-sky-100" : "bg-white/20"
-              }`}>
-                {card.icon}
+              <div
+                className={`relative w-full h-32  rounded-2xl  mb-4 ${card.isWhite
+                    ? "bg-sky-50 border border-sky-100"
+                    : "bg-white/20"
+                  }`}
+              >
+                <Image
+                  src={card.icon}
+                  alt={card.title}
+                  fill
+                  className="object-cover rounded-2xl "
+                />
               </div>
               <div>
-                <span className={`text-3xl font-black tracking-wide block ${
-                  card.isWhite ? "text-sky-950" : "text-white"
-                }`}>
+                <span className={`text-3xl font-black tracking-wide block ${card.isWhite ? "text-sky-950" : "text-white"
+                  }`}>
                   {card.title}
                 </span>
-                <span className={`text-base font-bold mt-1 block ${
-                  card.isWhite ? "text-slate-500" : "text-sky-100 opacity-90"
-                }`}>
+                <span className={`text-base font-bold mt-1 block ${card.isWhite ? "text-slate-500" : "text-sky-100 opacity-90"
+                  }`}>
                   {card.desc}
                 </span>
               </div>

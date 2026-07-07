@@ -10,7 +10,7 @@ const fredoka = Fredoka({
 });
 
 export const metadata: Metadata = {
-  title: "Ayo Belajar! 🌟 Media Pembelajaran Interaktif",
+  title: "aphi",
   description: "Aplikasi belajar interaktif yang dirancang khusus dengan aksesibilitas tinggi untuk anak-anak berkebutuhan khusus.",
 };
 
