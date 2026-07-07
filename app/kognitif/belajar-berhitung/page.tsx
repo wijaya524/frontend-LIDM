@@ -36,12 +36,12 @@ export default function BelajarBerhitungPage() {
             onStart={handleStartGame}
           />
         ) : (
-          <AngkaGame
-            speechRate={speechRate}
-            onComplete={() => markActivityCompleted("angka")}
-            startNewTask={startNewTask}
-            trackTaskAction={trackTaskAction}
-          />
+          // <AngkaGame
+          //   speechRate={speechRate}
+          //   onComplete={() => markActivityCompleted("angka")}
+          //   startNewTask={startNewTask}
+          //   trackTaskAction={trackTaskAction}
+          // />
         )}
       </section>
     </main>
