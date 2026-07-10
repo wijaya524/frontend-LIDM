@@ -3,19 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Brain,
-  Hand,
-  Tv,
-  Trophy,
-  User,
-  BarChart3,
-  Volume2,
-  MessageCircle,
-  HelpCircle,
-  Star,
-  Info
-} from "lucide-react";
+
 
 import { PandaAvatar } from "./illustrations";
 import Header from "./components/Header";

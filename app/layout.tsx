@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
-import { Fredoka } from "next/font/google";
+import { Fredoka, Geist } from "next/font/google";
 import { LearningProvider } from "./context/LearningContext";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const fredoka = Fredoka({
   variable: "--font-fredoka",
@@ -22,7 +25,7 @@ export default function RootLayout({
   return (
     <html
       lang="id"
-      className={`${fredoka.variable} h-full antialiased`}
+      className={cn("h-full", "antialiased", fredoka.variable, "font-sans", geist.variable)}
     >
       <body className="min-h-full flex flex-col bg-sky-50 font-sans text-slate-800">
         <LearningProvider>
