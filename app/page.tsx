@@ -3,46 +3,77 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { HelpCircle, Info, Menu, X } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-
-import { PandaAvatar } from "./illustrations";
-import Header from "./components/Header";
+import { PandaAvatar, RabbitAvatar, BearAvatar } from "./illustrations";
 import PanduanGuru from "./components/panduan";
 import TentangAplikasi from "./components/tentang";
+import ProfilAnak from "./components/profil";
+import LaporanGame from "./components/laporan";
 import { useLearning } from "./context/LearningContext";
 
+
+
 export default function DashboardPage() {
-  const { playSynth, speak } = useLearning();
-  const [view, setView] = useState<"splash" | "dashboard">("splash");
-  const [splashProgress, setSplashProgress] = useState<number>(0);
+  const {
+    playSynth,
+    speak,
+    childName,
+    childAvatar,
+    setChildName,
+    setChildAvatar,
+    completedActivities,
+  } = useLearning();
+
+  const totalStars = Object.values(completedActivities).filter(Boolean).length;
+  const maxStars = Object.keys(completedActivities).length;
+
+  const [activeTab, setActiveTab] = useState<"bermain" | "profil" | "pencapaian">("bermain");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showTeacherGuide, setShowTeacherGuide] = useState<boolean>(false);
   const [showAboutApp, setShowAboutApp] = useState<boolean>(false);
 
-  // Splash Screen progress timer
+  // Welcome speech greeting on mount & parsing search parameters / pathnames
   useEffect(() => {
-    if (view === "splash") {
-      const interval = setInterval(() => {
-        setSplashProgress((prev) => {
-          if (prev >= 100) {
-            clearInterval(interval);
-            setTimeout(() => {
-              setView("dashboard");
-              speak("Selamat datang di aplikasi belajar seru! Ayo pilih permainan yang kamu suka!");
-            }, 800);
-            return 100;
-          }
-          return prev + 5;
-        });
-      }, 90);
-      return () => clearInterval(interval);
+  
+
+    if (typeof window !== "undefined") {
+      const pathname = window.location.pathname;
+      if (pathname === "/profil") {
+        setActiveTab("profil");
+      } else if (pathname === "/pencapaian") {
+        setActiveTab("pencapaian");
+      } else {
+        setActiveTab("bermain");
+      }
+
+      // Fallback support for old ?tab query params
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get("tab");
+      if (tab === "profil") {
+        setActiveTab("profil");
+        window.history.replaceState(null, "", "/profil");
+      } else if (tab === "pencapaian") {
+        setActiveTab("pencapaian");
+        window.history.replaceState(null, "", "/pencapaian");
+      }
     }
-  }, [speak, view]);
+  }, [speak]);
+
+  const renderAvatar = (type: "panda" | "kelinci" | "beruang", sizeClass = "w-full h-full") => {
+    if (type === "panda") return <PandaAvatar className={sizeClass} />;
+    if (type === "kelinci") return <RabbitAvatar className={sizeClass} />;
+    return <BearAvatar className={sizeClass} />;
+  };
 
   // Dashboard Card list configuration
   const dashboardCards = [
     {
       key: "kognitif",
-      href: "/kognitif",
+      href: "/bermain/kognitif",
       title: "KOGNITIF",
       desc: "Belajar Warna, Bentuk & Angka",
       bg: "bg-purple-400 hover:bg-purple-500 border-purple-600",
@@ -51,7 +82,7 @@ export default function DashboardPage() {
     },
     {
       key: "motorik",
-      href: "/motorik",
+      href: "/bermain/motorik",
       title: "MOTORIK HALUS",
       desc: "Menjiplak, Menyentuh & Menyeret",
       bg: "bg-emerald-500 hover:bg-emerald-600 border-emerald-700",
@@ -60,7 +91,7 @@ export default function DashboardPage() {
     },
     {
       key: "video",
-      href: "/video",
+      href: "/bermain/video",
       title: "VIDEO CERITA",
       desc: "Cerita Interaktif & Senam Jari",
       bg: "bg-rose-500 hover:bg-rose-600 border-rose-700",
@@ -69,7 +100,7 @@ export default function DashboardPage() {
     },
     {
       key: "mengeja",
-      href: "/mengeja",
+      href: "/bermain/mengeja",
       title: "MENGEJA KATA",
       desc: "Eja Huruf-Huruf Bergambar",
       bg: "bg-pink-400 hover:bg-pink-500 border-pink-600",
@@ -78,7 +109,7 @@ export default function DashboardPage() {
     },
     {
       key: "kuis",
-      href: "/kuis",
+      href: "/bermain/kuis",
       title: "KUIS PINTAR",
       desc: "Uji Pemahaman Bentuk & Warna",
       bg: "bg-amber-400 hover:bg-amber-500 border-amber-600",
@@ -87,7 +118,7 @@ export default function DashboardPage() {
     },
     {
       key: "tebak-suara",
-      href: "/tebak-suara",
+      href: "/bermain/tebak-suara",
       title: "TEBAK SUARA",
       desc: "Mencocokkan Suara Hewan",
       bg: "bg-indigo-500 hover:bg-indigo-600 border-indigo-700",
@@ -96,140 +127,232 @@ export default function DashboardPage() {
     },
     {
       key: "tebak-gambar",
-      href: "/tebak-gambar",
+      href: "/bermain/tebak-gambar",
       title: "TEBAK GAMBAR",
       desc: "Cari Gambar yang Tepat",
       bg: "bg-teal-400 hover:bg-teal-500 border-teal-600",
       icon: '/icons/tebak-gambar.jpg',
       tts: "Ayo tebak gambar benda!"
-    },
-    {
-      key: "profil",
-      href: "/profil",
-      title: "PROFIL KU",
-      desc: "Ubah Nama & Karakter Hewan",
-      bg: "bg-white hover:bg-slate-50 border-4 border-sky-100 border-b-8 border-sky-200",
-      icon: '/icons/profile.jpg',
-      tts: "Pengaturan profil teman belajar",
-      isWhite: true
-    },
-    {
-      key: "laporan",
-      href: "/laporan",
-      title: "PRESTASI KU",
-      desc: "Checklist Koleksi Bintang Pintar",
-      bg: "bg-white hover:bg-slate-50 border-4 border-sky-100 border-b-8 border-sky-200",
-      icon: '/icons/prestasi.jpg',
-      tts: "Lihat koleksi bintang prestasimu!",
-      isWhite: true
     }
   ];
 
-  if (view === "splash") {
-    return (
-      <main className="flex-1 flex flex-col items-center justify-center min-h-screen px-4 bg-sky-50 relative select-none">
-        <div className="flex flex-col items-center max-w-md w-full text-center">
-          <div className="w-40 h-40 bg-white border-4 border-sky-200 rounded-full flex items-center justify-center p-3 shadow-lg mb-8 animate-bounce">
-            <PandaAvatar className="w-full h-full" />
+  return (
+    <div className="min-h-screen flex flex-col md:flex-row bg-sky-50 text-slate-800 font-sans relative w-full overflow-x-hidden">
+      
+      {/* Mobile Top Header: only shown on sm and below */}
+      <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b-4 border-sky-100 flex items-center justify-between px-4 z-30 shadow-sm select-none w-full">
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 bg-sky-50 p-1 border-2 border-sky-200 rounded-full flex items-center justify-center shadow-sm">
+            {renderAvatar(childAvatar, "w-full h-full")}
           </div>
-          <h1 className="text-4xl md:text-5xl font-black text-sky-950 mb-3 tracking-wide">
-            BELAJAR MANDIRI
-          </h1>
-          <p className="text-xl md:text-2xl font-bold text-slate-500 mb-8">
-            Media Pembelajaran Interaktif
-          </p>
+          <span className="text-xl font-black text-sky-950">{childName || "APHI"}</span>
+        </div>
+        <Button
+          onClick={() => setIsSidebarOpen(true)}
+          variant="ghost"
+          className="btn-tactile p-2 border-2 border-slate-200 rounded-xl"
+        >
+          <Menu className="w-6 h-6 text-sky-950" />
+        </Button>
+      </div>
 
-          <div className="w-full bg-slate-200 h-8 rounded-full overflow-hidden p-1 shadow-inner border-2 border-slate-300 mb-4">
+      {/* Sidebar Drawer Container (Overlay for mobile) */}
+      <div
+        className={cn(
+          "fixed inset-0 z-40 bg-black/40 backdrop-blur-xs transition-opacity duration-300 md:hidden",
+          isSidebarOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        )}
+        onClick={() => setIsSidebarOpen(false)}
+      />
+
+      {/* Sidebar Navigation */}
+      <aside
+        className={cn(
+          "fixed top-0 left-0 bottom-0 z-40 w-64 md:w-72 bg-white border-r-4 border-sky-100 flex flex-col justify-between transition-transform duration-300 select-none h-screen shrink-0",
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+        )}
+      >
+        {/* Top: Logo & Title */}
+        <div className="p-6 border-b-4 border-sky-50 flex flex-col items-center relative">
+          <Button
+            onClick={() => setIsSidebarOpen(false)}
+            variant="ghost"
+            className="md:hidden absolute top-4 right-4 btn-tactile p-2 border border-slate-100 rounded-full"
+          >
+            <X className="w-5 h-5 text-slate-500" />
+          </Button>
+
+          <div className="w-20 h-20 bg-sky-50 p-1 border-4 border-sky-200 rounded-full flex items-center justify-center shadow-md mb-3">
+            {renderAvatar(childAvatar, "w-full h-full")}
+          </div>
+          <h1 className="text-3xl font-black text-sky-950 tracking-wide">APHI</h1>
+        </div>
+
+        {/* Middle: Navigation Items */}
+        <nav className="flex-1 px-4 py-8 flex flex-col gap-4 overflow-hidden">
+          {[
+            { id: "bermain", label: "Bermain", tts: "Mari bermain dan belajar seru!", iconSrc: "/game.svg" },
+            { id: "profil", label: "Profil", tts: "Ubah nama panggilanmu di sini!", iconSrc: "/profile.svg" },
+            { id: "pencapaian", label: "Pencapaian", tts: "Lihat koleksi bintang prestasi yang sudah kamu kumpulkan!", iconSrc: "/trophy.svg" }
+          ].map((tab) => {
+            const isActive = activeTab === tab.id;
+            return (
+              <Button
+                key={tab.id}
+                onClick={() => {
+                  playSynth("bubble");
+                  setActiveTab(tab.id as "bermain" | "profil" | "pencapaian");
+                  speak(tab.tts);
+                  setIsSidebarOpen(false);
+                  if (typeof window !== "undefined") {
+                    window.history.pushState(null, "", tab.id === "bermain" ? "/bermain" : tab.id === "pencapaian" ? "/pencapaian" : "/profil");
+                  }
+                }}
+                variant="ghost"
+                className={cn(
+                  "btn-tactile w-full py-6 px-6 text-xl font-extrabold flex justify-start items-center gap-4 cursor-pointer shadow-sm h-auto border-b-4",
+                  isActive
+                    ? "bg-sky-500 hover:bg-sky-600 text-white border-sky-600 rounded-2xl hover:text-white"
+                    : "bg-slate-50 border-slate-200 hover:bg-slate-100 text-slate-700 rounded-2xl"
+                )}
+              >
+                <div className="w-8 h-8 relative flex items-center justify-center shrink-0">
+                  <Image
+                    src={tab.iconSrc}
+                    alt={tab.label}
+                    fill
+                    className="object-contain transition-all duration-300"
+                  />
+                </div>
+                <span>{tab.label}</span>
+              </Button>
+            );
+          })}
+        </nav>
+
+        {/* Bottom: Progress Bintang */}
+        <div className="p-6 border-t-4 border-sky-50 bg-slate-50/50 flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">⭐</span>
+              <span className="text-lg font-black text-sky-950">Bintang Saya</span>
+            </div>
+            <span className="text-lg font-black text-sky-700">
+              {totalStars} / {maxStars}
+            </span>
+          </div>
+          {/* Progress Bar */}
+          <div className="w-full bg-slate-200 h-4 rounded-full overflow-hidden border border-slate-300 shadow-inner">
             <div
-              className="bg-emerald-500 h-full rounded-full transition-all duration-100 ease-out"
-              style={{ width: `${splashProgress}%` }}
+              className="bg-linear-to-r from-amber-400 to-yellow-500 h-full rounded-full transition-all duration-500 shadow-md"
+              style={{ width: `${(totalStars / (maxStars || 1)) * 100}%` }}
             />
           </div>
-          <span className="text-lg font-black text-emerald-600">
-            Memuat Game... {splashProgress}%
-          </span>
         </div>
-      </main>
-    );
-  }
+      </aside>
 
-  return (
-    <main className="flex-1 flex flex-col min-h-screen bg-sky-50 select-none pb-12">
-      <Header />
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-h-screen overflow-y-auto pt-16 md:pt-0 w-full md:ml-72">
+        <main className="flex-1 flex flex-col p-6 md:p-8 w-full max-w-7xl mx-auto">
+          {activeTab === "bermain" && (
+            <section className="flex-1 flex flex-col items-center justify-center w-full py-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+                {dashboardCards.map((card) => (
+                  <Link
+                    key={card.key}
+                    href={card.href}
+                    onClick={() => {
+                      playSynth("bubble");
+                    }}
+                    className="block w-full h-full cursor-pointer transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    <Card
+                      className={cn(
+                        "btn-tactile rounded-[32px] p-6 text-left flex flex-col justify-start h-[360px] w-full shadow-md hover:shadow-xl transition-all duration-300 border-4",
+                        `${card.bg} border-black/10`
+                      )}
+                    >
+                      <div className="relative w-full h-36 rounded-2xl mb-4 bg-white/20 shrink-0 overflow-hidden">
+                        <Image
+                          src={card.icon}
+                          alt={card.title}
+                          fill
+                          className="object-cover rounded-2xl"
+                        />
+                      </div>
+                      <div className="flex flex-col justify-start">
+                        <div className="h-20 flex items-center mb-2">
+                          <span className="text-2xl md:text-3xl font-black tracking-wide block text-white leading-tight">
+                            {card.title}
+                          </span>
+                        </div>
+                        <span className="text-sm md:text-base font-bold block text-sky-100 opacity-90 leading-snug">
+                          {card.desc}
+                        </span>
+                      </div>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
 
-      <section className="flex-1 flex flex-col items-center justify-center px-4 md:px-8 py-8 w-full max-w-5xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-5xl">
-          {dashboardCards.map((card) => (
-            <Link
-              key={card.key}
-              href={card.href}
+          {activeTab === "profil" && (
+            <section className="flex-1 flex flex-col items-center justify-center w-full py-4">
+              <ProfilAnak
+                initialName={childName}
+                initialAvatar={childAvatar}
+                onSave={(name, avatar) => {
+                  playSynth("victory");
+                  setChildName(name);
+                  setChildAvatar(avatar);
+                  speak("Profil berhasil disimpan!");
+                  setActiveTab("bermain");
+                }}
+              />
+            </section>
+          )}
+
+          {activeTab === "pencapaian" && (
+            <section className="flex-1 flex flex-col items-center justify-center w-full py-4">
+              <LaporanGame completedActivities={completedActivities} />
+            </section>
+          )}
+        </main>
+
+        <footer className="w-full text-center py-6 px-4 border-t border-sky-100 bg-white/50 flex flex-col items-center gap-4">
+          <div className="flex gap-4">
+            <Button
               onClick={() => {
                 playSynth("bubble");
-                speak(card.tts);
+                setShowTeacherGuide(true);
               }}
-              className={`btn-tactile rounded-4xl p-6 text-left flex flex-col justify-between min-h-60 shadow-md cursor-pointer transition-all hover:-translate-y-1 ${card.isWhite
-                ? "bg-white hover:bg-slate-50 border-4 border-sky-100 border-b-8"
-                : card.bg
-                }`}
+              variant="outline"
+              className="text-slate-600 hover:text-sky-600 bg-white border-2 border-slate-200 hover:border-sky-200 px-6 py-6 rounded-2xl text-lg font-bold flex items-center gap-2 cursor-pointer shadow-sm h-auto btn-tactile"
             >
-              <div
-                className={`relative w-full h-32  rounded-2xl  mb-4 ${card.isWhite
-                    ? "bg-sky-50 border border-sky-100"
-                    : "bg-white/20"
-                  }`}
-              >
-                <Image
-                  src={card.icon}
-                  alt={card.title}
-                  fill
-                  className="object-cover rounded-2xl "
-                />
-              </div>
-              <div>
-                <span className={`text-3xl font-black tracking-wide block ${card.isWhite ? "text-sky-950" : "text-white"
-                  }`}>
-                  {card.title}
-                </span>
-                <span className={`text-base font-bold mt-1 block ${card.isWhite ? "text-slate-500" : "text-sky-100 opacity-90"
-                  }`}>
-                  {card.desc}
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+              <HelpCircle className="w-6 h-6 text-sky-500" /> Panduan Guru
+            </Button>
 
-      <footer className="w-full text-center mt-auto px-4 flex flex-col items-center gap-4">
-        <div className="flex gap-4">
-          <button
-            onClick={() => {
-              playSynth("bubble");
-              setShowTeacherGuide(true);
-            }}
-            className="text-slate-500 hover:text-sky-600 bg-white border-2 border-slate-200 px-4 py-2 rounded-xl text-lg font-bold flex items-center gap-2 cursor-pointer shadow-sm"
-          >
-            <HelpCircle className="w-5 h-5 text-sky-500" /> Panduan Guru
-          </button>
+            <Button
+              onClick={() => {
+                playSynth("bubble");
+                setShowAboutApp(true);
+              }}
+              variant="outline"
+              className="text-slate-600 hover:text-sky-600 bg-white border-2 border-slate-200 hover:border-sky-200 px-6 py-6 rounded-2xl text-lg font-bold flex items-center gap-2 cursor-pointer shadow-sm h-auto btn-tactile"
+            >
+              <Info className="w-6 h-6 text-sky-500" /> Tentang Aplikasi
+            </Button>
+          </div>
 
-          <button
-            onClick={() => {
-              playSynth("bubble");
-              setShowAboutApp(true);
-            }}
-            className="text-slate-500 hover:text-sky-600 bg-white border-2 border-slate-200 px-4 py-2 rounded-xl text-lg font-bold flex items-center gap-2 cursor-pointer shadow-sm"
-          >
-            <Info className="w-5 h-5 text-sky-500" /> Tentang Aplikasi
-          </button>
-        </div>
-
-        <div className="text-slate-400 text-sm font-semibold tracking-wide mt-2">
-          &copy; 2026 Belajar Mandiri. Dibuat dengan Kasih Sayang.
-        </div>
-      </footer>
+          <div className="text-slate-400 text-sm font-semibold tracking-wide">
+            &copy; 2026 Belajar Mandiri. Dibuat dengan Kasih Sayang.
+          </div>
+        </footer>
+      </div>
 
       {showTeacherGuide && <PanduanGuru onClose={() => setShowTeacherGuide(false)} />}
       {showAboutApp && <TentangAplikasi onClose={() => setShowAboutApp(false)} />}
-    </main>
+    </div>
   );
 }

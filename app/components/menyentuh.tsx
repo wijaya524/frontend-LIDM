@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Trophy } from "lucide-react";
 import { playSynthSound, speakInstruction } from "../utils/audio";
+import { Button } from "@/components/ui/button";
 
 interface MenyentuhProps {
   speechRate: number;
@@ -35,33 +36,44 @@ export default function MenyentuhGame({ speechRate, onComplete, startNewTask, tr
 
   const handlePopBalloon = (id: number) => {
     if (trackTaskAction) trackTaskAction();
-    playSynthSound("pop");
+    
+    try {
+      const audio = new Audio("/audio/pop_balloon.wav");
+      audio.play().catch((err) => {
+        console.warn("Failed to play custom pop sound, playing fallback synth", err);
+        playSynthSound("pop");
+      });
+    } catch (e) {
+      console.warn("Failed to instantiate Audio, playing fallback synth", e);
+      playSynthSound("pop");
+    }
+
     setBalloons((prev) => prev.filter((b) => b.id !== id));
-    setBalloonScore((score) => {
-      const newScore = score + 1;
-      if (newScore >= 5) {
-        playSynthSound("victory");
-        onComplete();
-        speakInstruction("Bagus! Semua balon sudah meletus!", speechRate);
-      } else {
-        speakInstruction(`Meletus! Skor ${newScore}`, speechRate);
-        if (startNewTask) startNewTask();
-      }
-      return newScore;
-    });
+    
+    const newScore = balloonScore + 1;
+    setBalloonScore(newScore);
+
+    if (newScore >= 5) {
+      playSynthSound("victory");
+      onComplete();
+      speakInstruction("Bagus! Semua balon sudah meletus!", speechRate);
+    } else {
+      if (startNewTask) startNewTask();
+    }
   };
 
   return (
-    <div className="w-full max-w-2xl bg-white border-4 border-sky-100 rounded-[36px] shadow-xl p-6 md:p-8 flex flex-col items-center relative overflow-hidden">
+    <div className="w-full max-w-2xl flex flex-col items-center relative overflow-hidden py-6 select-none">
       <h3 className="text-3xl font-black text-sky-950 mb-2 text-center">Ketuk dan Pecahkan Balon! 🎈</h3>
       <p className="text-lg font-bold text-slate-500 mb-4 text-center">Pecahkan 5 balon untuk menang!</p>
 
       <div className="relative border-4 border-dashed border-sky-200 rounded-3xl bg-sky-50/20 w-full h-80 overflow-hidden shadow-inner">
         {balloons.map((b) => (
-          <button
+          <Button
             key={b.id}
             onClick={() => handlePopBalloon(b.id)}
-            className={`absolute rounded-full cursor-pointer btn-tactile ${b.color} border-4 border-white/50 flex items-center justify-center text-3xl font-black text-white`}
+            variant="ghost"
+            className={`absolute rounded-full cursor-pointer btn-tactile ${b.color} border-4 border-white/50 flex items-center justify-center text-3xl font-black text-white p-0`}
             style={{
               left: `${b.left}%`,
               top: `${b.top}%`,
@@ -73,24 +85,24 @@ export default function MenyentuhGame({ speechRate, onComplete, startNewTask, tr
             aria-label="Pecahkan balon"
           >
             🎈
-          </button>
+          </Button>
         ))}
 
         {balloonScore >= 5 && (
-          <div className="absolute inset-0 bg-white/95 flex flex-col items-center justify-center p-6 text-center animate-bounce">
+          <div className="absolute inset-0 bg-white/95 flex flex-col items-center justify-center p-6 text-center ">
             <Trophy className="w-20 h-20 text-amber-500 fill-amber-200 mb-3 animate-pulse" />
             <span className="text-4xl font-black text-sky-950 mb-2">Kamu Juara! 🌟</span>
             <p className="text-xl font-bold text-slate-600 mb-6">Semua balon sudah dipecahkan!</p>
-            <button
+            <Button
               onClick={() => {
                 playSynthSound("bubble");
                 setBalloonScore(0);
                 initBalloons();
               }}
-              className="btn-tactile py-4 px-6 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl text-xl font-extrabold cursor-pointer"
+              className="btn-tactile py-5 px-6 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl text-xl font-extrabold cursor-pointer h-auto border-b-4 border-emerald-600"
             >
               MAIN LAGI 🔄
-            </button>
+            </Button>
           </div>
         )}
       </div>

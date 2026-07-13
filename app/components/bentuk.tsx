@@ -1,6 +1,12 @@
+"use client";
+
 import React, { useState } from "react";
+import Image from "next/image"; 
 import { playSynthSound, speakInstruction } from "../utils/audio";
-import { CircleIllustration, SquareIllustration, TriangleIllustration } from "../illustrations";
+import { Button } from "@/components/ui/button";
+import round from '@/public/icons/bentuk/round.svg'
+import triangle from '@/public/icons/bentuk/triangle.svg'
+import square from '@/public/icons/bentuk/square.svg'
 
 interface BentukProps {
   speechRate: number;
@@ -12,23 +18,22 @@ interface BentukProps {
 export default function BentukGame({
   speechRate,
   onComplete,
-  startNewTask,
   trackTaskAction
 }: BentukProps) {
   const [selectedShape, setSelectedShape] = useState<string | null>(null);
   const [shapeWobble, setShapeWobble] = useState<boolean>(false);
 
   return (
-    <div className="w-full max-w-2xl bg-white border-4 border-sky-100 rounded-[36px] shadow-xl p-6 md:p-8 flex flex-col items-center">
+    <div className="w-full max-w-2xl flex flex-col items-center py-6 select-none">
       <h3 className="text-3xl font-black text-sky-950 mb-6 text-center">Ketuk untuk Mengenal Bentuk! 📐</h3>
       
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full mb-8">
         {[
-          { id: "lingkaran", name: "LINGKARAN", illustration: <CircleIllustration className="w-36 h-36" />, tts: "Lingkaran" },
-          { id: "persegi", name: "PERSEGI", illustration: <SquareIllustration className="w-36 h-36" />, tts: "Persegi" },
-          { id: "segitiga", name: "SEGITIGA", illustration: <TriangleIllustration className="w-36 h-36" />, tts: "Segitiga" },
+          { id: "lingkaran", name: "LINGKARAN", illustration: round, tts: "Lingkaran" },
+          { id: "persegi", name: "PERSEGI", illustration: square, tts: "Persegi" },
+          { id: "segitiga", name: "SEGITIGA", illustration: triangle, tts: "Segitiga" },
         ].map((s) => (
-          <button
+          <Button
             key={s.id}
             onClick={() => {
               if (trackTaskAction) trackTaskAction();
@@ -39,16 +44,25 @@ export default function BentukGame({
               speakInstruction(s.tts, speechRate);
               onComplete();
             }}
-            className={`btn-tactile flex flex-col items-center p-6 bg-slate-50 border-4 rounded-3xl cursor-pointer ${
+            variant="ghost"
+            className={`btn-tactile flex flex-col items-center justify-center p-6 bg-slate-50 border-4 rounded-[28px] cursor-pointer h-auto min-h-75 w-full transition-all duration-300 hover:bg-slate-100 ${
               selectedShape === s.name ? "border-sky-400 bg-sky-50/50 scale-105" : "border-slate-100"
             }`}
             aria-label={`Pilih bentuk ${s.tts}`}
           >
-            <div className={selectedShape === s.name && shapeWobble ? "animate-bounce" : ""}>
-              {s.illustration}
+            <div className="flex-1 flex items-center justify-center w-full">
+              <div className={selectedShape === s.name && shapeWobble ? "animate-bounce" : ""}>
+                <Image 
+                  src={s.illustration} 
+                  alt={s.name}
+                  width={160} 
+                  height={160}
+                  className="w-32 h-32 sm:w-40 sm:h-40 object-contain" 
+                />
+              </div>
             </div>
-            <span className="text-xl font-black text-slate-700 mt-4">{s.name}</span>
-          </button>
+            <span className="text-xl font-black text-slate-700 mt-6">{s.name}</span>
+          </Button>
         ))}
       </div>
 

@@ -22,15 +22,18 @@ export default function MengejaPage() {
     incrementHints
   } = useActivityTracker("mengeja");
 
+  useEffect(() => {
+    speak("Ayo mengeja kata benda!");
+  }, [speak]);
+
   const handleStartGame = () => {
     startActivity();
-    speak("Ayo mengeja kata benda!");
   };
 
   return (
     <main className="flex-1 flex flex-col min-h-screen bg-sky-50 select-none pb-12 w-full">
       <Header />
-      <BackButton href="/" ttsText="Kembali ke menu utama" />
+      <BackButton href="/bermain" />
 
       <section className="flex-1 flex flex-col items-center justify-center px-4 md:px-8 w-full max-w-5xl mx-auto">
         {!isStarted ? (
@@ -43,7 +46,7 @@ export default function MengejaPage() {
             speechRate={speechRate}
             onComplete={() => markActivityCompleted("mengeja")}
             onBackToMenu={() => {
-              router.push("/");
+              router.push("/bermain");
             }}
             incrementHints={incrementHints}
             startNewTask={startNewTask}

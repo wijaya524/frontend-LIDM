@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { RotateCcw, Star } from "lucide-react";
 import { playSynthSound, speakInstruction } from "../utils/audio";
-import { ButterflyIllustration, FlowerIllustration } from "../illustrations";
+import { Button } from "@/components/ui/button";
 
 interface MenjiplakProps {
   speechRate: number;
@@ -10,7 +11,7 @@ interface MenjiplakProps {
   trackTaskAction?: () => void;
 }
 
-export default function MenjiplakGame({ speechRate, onComplete, startNewTask, trackTaskAction }: MenjiplakProps) {
+export default function MenjiplakGame({ speechRate, onComplete, trackTaskAction }: MenjiplakProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [traceCompleted, setTraceCompleted] = useState<boolean>(false);
@@ -18,8 +19,10 @@ export default function MenjiplakGame({ speechRate, onComplete, startNewTask, tr
   const pathPoints = useRef<{ x: number; y: number }[]>([]);
 
   useEffect(() => {
-    initCanvas();
-  }, []);
+    if (!traceCompleted) {
+      initCanvas();
+    }
+  }, [traceCompleted]);
 
   const initCanvas = () => {
     const canvas = canvasRef.current;
@@ -150,60 +153,79 @@ export default function MenjiplakGame({ speechRate, onComplete, startNewTask, tr
   };
 
   return (
-    <div className="w-full max-w-2xl bg-white border-4 border-sky-100 rounded-[36px] shadow-xl p-6 md:p-8 flex flex-col items-center">
+    <div className="w-full max-w-2xl flex flex-col items-center py-6 select-none">
       <h3 className="text-3xl font-black text-sky-950 mb-2 text-center">Bantu Kupu-kupu Hinggap di Bunga! 🦋</h3>
       <p className="text-lg font-bold text-slate-500 mb-4 text-center">Seret jari/mouse mengikuti garis abu-abu</p>
       
-      <div className="relative border-4 border-dashed border-sky-200 rounded-3xl overflow-hidden bg-sky-50/20 w-full h-64 md:h-72">
-        <canvas
-          ref={canvasRef}
-          onMouseDown={handleStartDraw}
-          onMouseMove={handleDrawing}
-          onMouseUp={handleStopDraw}
-          onMouseLeave={handleStopDraw}
-          onTouchStart={handleStartDraw}
-          onTouchMove={handleDrawing}
-          onTouchEnd={handleStopDraw}
-          className="absolute inset-0 w-full h-full cursor-crosshair touch-none"
-        />
+      <div className="relative border-4 border-dashed border-sky-200 rounded-3xl overflow-hidden bg-sky-50/20 w-full h-64 md:h-72 shadow-inner">
+        {traceCompleted ? (
+          <div className="absolute inset-0 bg-white flex flex-col items-center justify-center p-4 animate-in zoom-in duration-500">
+            <div className="relative w-full h-44 sm:h-52">
+              <Image
+                src="/icons/menjiplak/kupu hinggap ke bunga.webp"
+                alt="Kupu-kupu Hinggap ke Bunga"
+                fill
+                className="object-contain"
+              />
+            </div>
+          </div>
+        ) : (
+          <>
+            <canvas
+              ref={canvasRef}
+              onMouseDown={handleStartDraw}
+              onMouseMove={handleDrawing}
+              onMouseUp={handleStopDraw}
+              onMouseLeave={handleStopDraw}
+              onTouchStart={handleStartDraw}
+              onTouchMove={handleDrawing}
+              onTouchEnd={handleStopDraw}
+              className="absolute inset-0 w-full h-full cursor-crosshair touch-none"
+            />
 
-        <div className="absolute top-1/2 -translate-y-1/2 left-2 pointer-events-none select-none w-16 h-16 bg-white/70 p-1.5 rounded-full border-2 border-purple-200">
-          <ButterflyIllustration className="w-full h-full" />
-        </div>
-        <div className="absolute top-1/2 -translate-y-1/2 right-2 pointer-events-none select-none w-16 h-16 bg-white/70 p-1.5 rounded-full border-2 border-emerald-200">
-          <FlowerIllustration className="w-full h-full" />
-        </div>
+            <div className="absolute top-1/2 -translate-y-1/2 left-2 pointer-events-none select-none w-16 h-16 bg-white/95 p-1.5 rounded-full border-4 border-purple-200 shadow-md">
+              <div className="w-full h-full relative">
+                <Image
+                  src="/icons/menjiplak/butterfly.webp"
+                  alt="Kupu-kupu"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+            </div>
+            <div className="absolute top-1/2 -translate-y-1/2 right-2 pointer-events-none select-none w-16 h-16 bg-white/95 p-1.5 rounded-full border-4 border-emerald-200 shadow-md">
+              <div className="w-full h-full relative">
+                <Image
+                  src="/icons/menjiplak/flower.webp"
+                  alt="Bunga"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+            </div>
 
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white/90 px-4 py-1 rounded-full border border-sky-100 text-base font-black text-sky-800">
-          Menjiplak: {tracePercent}%
-        </div>
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white/90 px-4 py-1 rounded-full border border-sky-100 text-base font-black text-sky-800">
+              Menjiplak: {tracePercent}%
+            </div>
+          </>
+        )}
       </div>
 
       <div className="flex gap-4 w-full mt-6">
-        <button
+        <Button
           onClick={() => {
             playSynthSound("bubble");
             setTraceCompleted(false);
             setTracePercent(0);
-            initCanvas();
             speakInstruction("Silakan ulangi menjiplak dari kiri ke kanan.", speechRate);
           }}
-          className="btn-tactile flex-1 py-4 px-6 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-2xl text-xl font-bold flex items-center justify-center gap-2 cursor-pointer"
+          variant="outline"
+          className="btn-tactile flex-1 py-5 px-6 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-2xl text-xl font-bold flex items-center justify-center gap-2 cursor-pointer h-auto border-b-4 border-slate-400"
         >
           <RotateCcw className="w-6 h-6" /> ULANGI
-        </button>
+        </Button>
       </div>
 
-      {traceCompleted && (
-        <div className="mt-6 p-4 bg-emerald-50 border-2 border-emerald-200 rounded-2xl flex flex-col items-center w-full animate-bounce">
-          <span className="text-3xl font-black text-emerald-600 mb-2">HEBAT SEKALI! 🎉</span>
-          <div className="flex gap-1">
-            <Star className="w-8 h-8 text-amber-400 fill-amber-400" />
-            <Star className="w-8 h-8 text-amber-400 fill-amber-400" />
-            <Star className="w-8 h-8 text-amber-400 fill-amber-400" />
-          </div>
-        </div>
-      )}
     </div>
   );
 }

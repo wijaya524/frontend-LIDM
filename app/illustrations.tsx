@@ -563,12 +563,16 @@ export const CircleIllustration: React.FC<IllustrationProps> = ({ className = "w
     role="img"
     aria-label="Bentuk Lingkaran Biru"
   >
-    <ellipse cx="50" cy="88" rx="25" ry="5" fill="#000000" fillOpacity="0.08" />
-    <circle cx="50" cy="50" r="30" fill="#3B82F6" stroke="#1D4ED8" strokeWidth="4" />
-    <circle cx="42" cy="42" r="1.5" fill="#FFFFFF" />
+    {/* Bayangan disesuaikan lebarnya */}
+    <ellipse cx="50" cy="92" rx="35" ry="5" fill="#000000" fillOpacity="0.08" />
+    
+    {/* Radius (r) diubah dari 30 menjadi 42 agar jauh lebih besar */}
+    <circle cx="50" cy="48" r="42" fill="#3B82F6" stroke="#1D4ED8" strokeWidth="4" />
+    
+    {/* Titik kilau (highlight) putih digeser menyesuaikan ukuran baru */}
+    <circle cx="35" cy="35" r="2.5" fill="#FFFFFF" />
   </svg>
 );
-
 // Square (Persegi) - Orange, simple, clear
 export const SquareIllustration: React.FC<IllustrationProps> = ({ className = "w-full h-full" }) => (
   <svg

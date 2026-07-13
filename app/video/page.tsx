@@ -17,7 +17,7 @@ export default function VideoSubmenuPage() {
 
   const items = [
     {
-      href: "/video/mengenal-lingkaran",
+      href: "/bermain/video/mengenal-lingkaran",
       key: "video-kognitif",
       title: "Mengenal Lingkaran",
       icon: "🔵",
@@ -25,7 +25,7 @@ export default function VideoSubmenuPage() {
       tts: "Menonton video kognitif bentuk lingkaran",
     },
     {
-      href: "/video/senam-jari",
+      href: "/bermain/video/senam-jari",
       key: "video-motorik",
       title: "Latihan Gerak Senam Jari",
       icon: "🖐️",
@@ -37,11 +37,11 @@ export default function VideoSubmenuPage() {
   return (
     <main className="flex-1 flex flex-col min-h-screen bg-sky-50 pb-12">
       <Header />
-      <BackButton href="/" ttsText="Kembali ke menu utama" />
+      <BackButton href="/bermain"  />
 
       <section className="flex-1 flex flex-col items-center justify-center px-4 md:px-8 w-full max-w-xl mx-auto">
         <h2 className="text-4xl font-black text-sky-950 mb-8 text-center">
-          📺 Video Belajar Cerita
+          Video Belajar Cerita
         </h2>
 
         <div className="flex flex-col gap-5 w-full">

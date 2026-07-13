@@ -1,5 +1,8 @@
+"use client";
+
 import React, { useState } from "react";
 import { playSynthSound, speakInstruction } from "../utils/audio";
+import { Button } from "@/components/ui/button";
 
 interface WarnaProps {
   speechRate: number;
@@ -17,17 +20,33 @@ export default function WarnaGame({
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
   return (
-    <div className="w-full max-w-2xl bg-white border-4 border-sky-100 rounded-[36px] shadow-xl p-6 md:p-8 flex flex-col items-center">
+    <div className="w-full max-w-2xl flex flex-col items-center py-6 select-none">
       <h3 className="text-3xl font-black text-sky-950 mb-6 text-center">Ketuk untuk Mengenal Warna! 🎨</h3>
-      
+
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full mb-8">
         {[
-          { name: "MERAH", color: "bg-red-500 border-red-600", tts: "Merah" },
-          { name: "KUNING", color: "bg-yellow-400 border-yellow-500", tts: "Kuning" },
-          { name: "BIRU", color: "bg-blue-500 border-blue-600", tts: "Biru" },
-          { name: "HIJAU", color: "bg-green-500 border-green-600", tts: "Hijau" },
+          {
+            name: "MERAH",
+            color: "bg-red-500 hover:bg-red-500 border-red-600",
+            tts: "Merah",
+          },
+          {
+            name: "KUNING",
+            color: "bg-yellow-400 hover:bg-yellow-400 border-yellow-500",
+            tts: "Kuning",
+          },
+          {
+            name: "BIRU",
+            color: "bg-blue-500 hover:bg-blue-500 border-blue-600",
+            tts: "Biru",
+          },
+          {
+            name: "HIJAU",
+            color: "bg-green-500 hover:bg-green-500 border-green-600",
+            tts: "Hijau",
+          },
         ].map((c) => (
-          <button
+          <Button
             key={c.name}
             onClick={() => {
               if (trackTaskAction) trackTaskAction();
@@ -36,9 +55,9 @@ export default function WarnaGame({
               speakInstruction(c.tts, speechRate);
               onComplete();
             }}
-            className={`btn-tactile h-32 rounded-3xl border-4 cursor-pointer transition-all ${c.color} ${
-              selectedColor === c.name ? "ring-8 ring-sky-300 scale-105" : ""
-            }`}
+            variant="default"
+            className={`btn-tactile h-32 rounded-3xl border-4 cursor-pointer transition-all duration-300 ${c.color} ${selectedColor === c.name ? "ring-8 ring-sky-200 scale-105" : ""
+              }`}
             aria-label={`Pilih warna ${c.tts}`}
           />
         ))}

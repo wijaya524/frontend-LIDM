@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { playSynthSound, speakInstruction } from "../utils/audio";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
 interface TebakGambarProps {
   speechRate: number;
@@ -28,7 +29,13 @@ export default function TebakGambarGame({
   const [imageSuccess, setImageSuccess] = useState<boolean | null>(null);
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
 
-  const imageQuestions = [
+  const imageQuestions: {
+    targetWord: string;
+    correctAnswer: string;
+    options: string[];
+    illustrations: Record<string, string>;
+    ttsPrompt: string;
+  }[] = [
     { targetWord: "MOBIL", correctAnswer: "MOBIL", options: ["BOLA", "MOBIL"], illustrations: { BOLA: '/icons/tebak-gambar/bola.png', MOBIL: '/icons/tebak-gambar/mobil.png' }, ttsPrompt: "Pilih gambar yang sesuai dengan tulisan M O B I L" },
     { targetWord: "APEL", correctAnswer: "APEL", options: ["APEL", "JERUK"], illustrations: { APEL: '/icons/tebak-gambar/apel.png', JERUK: '/icons/tebak-gambar/jeruk.png' }, ttsPrompt: "Tunjuk gambar buah APEL!" },
     { targetWord: "BUKU", correctAnswer: "BUKU", options: ["PISANG", "BUKU"], illustrations: { PISANG: '/icons/tebak-gambar/pisang.png', BUKU: '/icons/tebak-gambar/buku.png'  }, ttsPrompt: "Mana gambar yang merupakan BUKU bacaan?" }
@@ -99,8 +106,8 @@ export default function TebakGambarGame({
   };
 
   return (
-    <div className="w-full max-w-2xl bg-white border-4 border-sky-100 rounded-[36px] shadow-xl p-6 md:p-8 flex flex-col items-center">
-      <h3 className="text-3xl font-black text-sky-950 mb-2 text-center">Permainan Tebak Gambar! 🖼️</h3>
+    <div className="w-full max-w-2xl flex flex-col items-center py-6 select-none">
+      <h3 className="text-3xl font-black text-sky-950 mb-2 text-center">Permainan Tebak Gambar! </h3>
       <p className="text-lg font-bold text-slate-500 mb-6 text-center">Tunjuk gambar yang cocok dengan tulisan</p>
 
       <div className="flex flex-col items-center bg-slate-50 border-2 border-slate-100 rounded-3xl p-6 w-full mb-6">
@@ -108,26 +115,25 @@ export default function TebakGambarGame({
           {imageQuestions[imageQuestionIndex].targetWord}
         </div>
 
-        <div className="grid grid-cols-2  w-full">
+        <div className="grid grid-cols-2 gap-4 w-full">
           {imageQuestions[imageQuestionIndex].options.map((opt) => (
-            <button
+            <Button
               key={opt}
               onClick={() => handleImageAnswer(opt)}
               disabled={selectedImageAnswer !== null}
-              className={`btn-tactile p-4 border-4 rounded-3xl flex flex-col items-center gap-3 min-h-80
-    ${selectedImageAnswer === opt
+              variant="ghost"
+              className={`btn-tactile p-4 border-4 rounded-3xl flex flex-col items-center gap-3 min-h-80 w-full h-auto cursor-pointer transition-all duration-300 hover:bg-slate-100/50 ${
+                selectedImageAnswer === opt
                   ? opt === imageQuestions[imageQuestionIndex].correctAnswer
                     ? "bg-emerald-50 border-emerald-400"
                     : "bg-red-50 border-red-400"
                   : "bg-white border-slate-200 hover:bg-slate-50"
-                }`}
+              }`}
             >
               <div className="relative w-full h-48 rounded-2xl overflow-hidden bg-white">
                 <Image
                   src={
-                    imageQuestions[imageQuestionIndex].illustrations[
-                    opt as keyof typeof imageQuestions[number]["illustrations"]
-                    ]
+                    imageQuestions[imageQuestionIndex].illustrations[opt] || ""
                   }
                   alt={opt}
                   fill
@@ -135,10 +141,10 @@ export default function TebakGambarGame({
                 />
               </div>
 
-              <span className="text-xl font-black text-slate-700 text-center">
+              <span className="text-xl font-black text-slate-700 text-center block">
                 {opt}
               </span>
-            </button>
+            </Button>
           ))}
         </div>
       </div>

@@ -16,7 +16,7 @@ export default function MengenalLingkaranPage() {
   return (
     <main className="flex-1 flex flex-col min-h-screen bg-sky-50 select-none pb-12 w-full">
       <Header />
-      <BackButton href="/video" ttsText="Kembali ke video belajar" />
+      <BackButton href="/bermain/video" ttsText="Kembali ke video belajar" />
 
       <section className="flex-1 flex flex-col items-center justify-center px-4 md:px-8 w-full max-w-5xl mx-auto">
         <VideoGame

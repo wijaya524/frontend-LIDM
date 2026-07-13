@@ -21,16 +21,18 @@ export default function KuisPage() {
     incrementHints
   } = useActivityTracker("kuis");
 
+  useEffect(() => {
+    speak("Ayo kerjakan kuis bintang pintar! Jawab pertanyaan dengan benar.");
+  }, [speak]);
+
   const handleStartGame = () => {
     startActivity();
-    speak("Ayo kerjakan kuis bintang pintar! Jawab pertanyaan dengan benar.");
   };
 
   return (
-    <main className="flex-1 flex flex-col min-h-screen bg-sky-50 select-none pb-12 w-full">
+    <main className="flex-1 flex flex-col min-h-screen bg-sky-50 select-none pb-12 w-full ">
       <Header />
-      <BackButton href="/" ttsText="Kembali ke menu utama" />
-
+      <BackButton href="/bermain"  />
       <section className="flex-1 flex flex-col items-center justify-center px-4 md:px-8 w-full max-w-5xl mx-auto">
         {!isStarted ? (
           <ActivityStartScreen
