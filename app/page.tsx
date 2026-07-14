@@ -77,7 +77,7 @@ export default function DashboardPage() {
       title: "KOGNITIF",
       desc: "Belajar Warna, Bentuk & Angka",
       bg: "bg-purple-400 hover:bg-purple-500 border-purple-600",
-      icon: '/icons/kognitif.jpg',
+      icon: '/icons/kognitif.webp',
       tts: "Latihan Kognitif. Ayo pilih warna, bentuk, atau angka!"
     },
     {
@@ -86,25 +86,17 @@ export default function DashboardPage() {
       title: "MOTORIK HALUS",
       desc: "Menjiplak, Menyentuh & Menyeret",
       bg: "bg-emerald-500 hover:bg-emerald-600 border-emerald-700",
-      icon: '/icons/motorik.jpg',
+      icon: '/icons/motorik.webp',
       tts: "Latihan Motorik. Ayo menjiplak kupu-kupu, bermain balon, atau menata keranjang!"
     },
-    {
-      key: "video",
-      href: "/bermain/video",
-      title: "VIDEO CERITA",
-      desc: "Cerita Interaktif & Senam Jari",
-      bg: "bg-rose-500 hover:bg-rose-600 border-rose-700",
-      icon: '/icons/video.jpg',
-      tts: "Video Belajar. Tonton cerita kognitif atau senam jari!"
-    },
+
     {
       key: "mengeja",
       href: "/bermain/mengeja",
       title: "MENGEJA KATA",
       desc: "Eja Huruf-Huruf Bergambar",
       bg: "bg-pink-400 hover:bg-pink-500 border-pink-600",
-      icon: '/icons/mengeja-kata.jpg',
+      icon: '/icons/mengeja-kata.webp',
       tts: "Ayo mengeja kata benda!"
     },
     {
@@ -113,7 +105,7 @@ export default function DashboardPage() {
       title: "KUIS PINTAR",
       desc: "Uji Pemahaman Bentuk & Warna",
       bg: "bg-amber-400 hover:bg-amber-500 border-amber-600",
-      icon: '/icons/kuis.jpg',
+      icon: '/icons/kuis.webp',
       tts: "Ayo kerjakan kuis bintang pintar!"
     },
     {
@@ -122,7 +114,7 @@ export default function DashboardPage() {
       title: "TEBAK SUARA",
       desc: "Mencocokkan Suara Hewan",
       bg: "bg-indigo-500 hover:bg-indigo-600 border-indigo-700",
-      icon: '/icons/tebak-suara.jpg',
+      icon: '/icons/tebak-suara.webp',
       tts: "Mari tebak suara hewan!"
     },
     {
@@ -131,7 +123,7 @@ export default function DashboardPage() {
       title: "TEBAK GAMBAR",
       desc: "Cari Gambar yang Tepat",
       bg: "bg-teal-400 hover:bg-teal-500 border-teal-600",
-      icon: '/icons/tebak-gambar.jpg',
+      icon: '/icons/tebak-gambar.webp',
       tts: "Ayo tebak gambar benda!"
     }
   ];
@@ -202,7 +194,6 @@ export default function DashboardPage() {
                 onClick={() => {
                   playSynth("bubble");
                   setActiveTab(tab.id as "bermain" | "profil" | "pencapaian");
-                  speak(tab.tts);
                   setIsSidebarOpen(false);
                   if (typeof window !== "undefined") {
                     window.history.pushState(null, "", tab.id === "bermain" ? "/bermain" : tab.id === "pencapaian" ? "/pencapaian" : "/profil");
@@ -306,7 +297,6 @@ export default function DashboardPage() {
                   playSynth("victory");
                   setChildName(name);
                   setChildAvatar(avatar);
-                  speak("Profil berhasil disimpan!");
                   setActiveTab("bermain");
                 }}
               />

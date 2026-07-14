@@ -26,20 +26,29 @@ export default function KognitifSubmenuPage() {
       title: "Mengenal Warna",
       icon: "🎨",
       tts: "",
+      cardCollor: "bg-cyan-400",
+      Border: "border-cyan-200",
+      iconBackground: "bg-cyan-100"
     },
     {
       href: "/bermain/kognitif/mengenal-bentuk",
       key: "bentuk",
       title: "Mengenal Bentuk",
       icon: "📐",
-      tts: "Mulai mengenal bentuk",
+      tts: "",
+      cardCollor: "bg-emerald-400",
+      Border: "border-emerald-200",
+       iconBackground: "bg-emerald-100"
     },
     {
       href: "/bermain/kognitif/belajar-berhitung",
       key: "angka",
-      title: "Belajar Berhitung",
+      title: "Mengenal Angka",
       icon: "🔢",
-      tts: "Mulai belajar berhitung angka",
+      tts: "",
+      cardCollor: "bg-violet-500",
+      Border: "border-violet-200",
+       iconBackground: "bg-violet-100"
     },
   ];
 
@@ -96,29 +105,30 @@ export default function KognitifSubmenuPage() {
                 }}
               >
                 <Card
-                  className="
+                  className={`
                  cursor-pointer
     rounded-3xl
     border-4
-    border-sky-100
-    bg-white
+    ${item.Border}
+    ${item.cardCollor}
     shadow-md
-                  "
+    
+                  `}
                 >
                   <CardContent className="flex items-center justify-between p-6">
 
                     <div className="flex items-center gap-5">
 
-                      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-sky-100 text-4xl">
+                      <div className={`flex h-16 w-16 items-center justify-center rounded-2xl  text-4xl ${item.iconBackground}`}>
                         {item.icon}
                       </div>
 
                       <div>
-                        <h3 className="text-3xl font-black text-slate-800">
+                        <h3 className="text-3xl font-black text-white">
                           {item.title}
                         </h3>
 
-                        <p className="text-slate-500 text-base">
+                        <p className="text-white text-base">
                           Ketuk untuk mulai
                         </p>
                       </div>

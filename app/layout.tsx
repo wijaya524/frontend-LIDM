@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   description: "Aplikasi belajar interaktif yang dirancang khusus dengan aksesibilitas tinggi untuk anak-anak berkebutuhan khusus.",
 };
 
+import { Toaster } from "sonner";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,6 +33,7 @@ export default function RootLayout({
         <LearningProvider>
           {children}
         </LearningProvider>
+        <Toaster position="top-center" richColors />
       </body>
     </html>
   );

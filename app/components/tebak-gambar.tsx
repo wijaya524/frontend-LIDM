@@ -5,6 +5,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { playSynthSound, speakInstruction } from "../utils/audio";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface TebakGambarProps {
   speechRate: number;
@@ -36,9 +37,9 @@ export default function TebakGambarGame({
     illustrations: Record<string, string>;
     ttsPrompt: string;
   }[] = [
-    { targetWord: "MOBIL", correctAnswer: "MOBIL", options: ["BOLA", "MOBIL"], illustrations: { BOLA: '/icons/tebak-gambar/bola.png', MOBIL: '/icons/tebak-gambar/mobil.png' }, ttsPrompt: "Pilih gambar yang sesuai dengan tulisan M O B I L" },
-    { targetWord: "APEL", correctAnswer: "APEL", options: ["APEL", "JERUK"], illustrations: { APEL: '/icons/tebak-gambar/apel.png', JERUK: '/icons/tebak-gambar/jeruk.png' }, ttsPrompt: "Tunjuk gambar buah APEL!" },
-    { targetWord: "BUKU", correctAnswer: "BUKU", options: ["PISANG", "BUKU"], illustrations: { PISANG: '/icons/tebak-gambar/pisang.png', BUKU: '/icons/tebak-gambar/buku.png'  }, ttsPrompt: "Mana gambar yang merupakan BUKU bacaan?" }
+    { targetWord: "MOBIL", correctAnswer: "MOBIL", options: ["BOLA", "MOBIL"], illustrations: { BOLA: '/icons/tebak-gambar/bola.webp', MOBIL: '/icons/tebak-gambar/mobil.webp' }, ttsPrompt: "Pilih gambar yang sesuai dengan tulisan M O B I L" },
+    { targetWord: "APEL", correctAnswer: "APEL", options: ["APEL", "JERUK"], illustrations: { APEL: '/icons/tebak-gambar/apel.webp', JERUK: '/icons/tebak-gambar/jeruk.webp' }, ttsPrompt: "Tunjuk gambar buah APEL!" },
+    { targetWord: "BUKU", correctAnswer: "BUKU", options: ["PISANG", "BUKU"], illustrations: { PISANG: '/icons/tebak-gambar/pisang.webp', BUKU: '/icons/tebak-gambar/buku.webp'  }, ttsPrompt: "Mana gambar yang merupakan BUKU bacaan?" }
   ];
 
   const clearTimers = () => {
@@ -76,13 +77,19 @@ export default function TebakGambarGame({
     if (option === question.correctAnswer) {
       playSynthSound("victory");
       setImageSuccess(true);
-      setImageFeedback("LUAR BIASA! Pilihanmu benar! ⭐️");
       speakInstruction("Betul!", speechRate);
+      toast.success("LUAR BIASA! Pilihanmu benar! ⭐️", {
+        className: "font-fredoka text-lg font-bold rounded-2xl border-2 border-emerald-200 bg-emerald-50 text-emerald-700 shadow-md",
+        duration: 2000
+      });
     } else {
       playSynthSound("wrong");
       setImageSuccess(false);
-      setImageFeedback("Bukan gambar itu. Ayo coba lagi! 💪");
       speakInstruction("Coba lagi!", speechRate);
+      toast.error("Bukan gambar itu. Ayo coba lagi! 💪", {
+        className: "font-fredoka text-lg font-bold rounded-2xl border-2 border-red-200 bg-red-50 text-red-700 shadow-md",
+        duration: 2000
+      });
       if (incrementWrongAnswers) incrementWrongAnswers();
     }
 
@@ -148,13 +155,6 @@ export default function TebakGambarGame({
           ))}
         </div>
       </div>
-
-      {imageFeedback && (
-        <div className={`p-4 rounded-2xl text-center w-full text-xl font-black border-2 ${imageSuccess ? "bg-emerald-50 border-emerald-300 text-emerald-700 animate-bounce" : "bg-red-50 border-red-300 text-red-700"
-          }`}>
-          {imageFeedback}
-        </div>
-      )}
     </div>
   );
 }

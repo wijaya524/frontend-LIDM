@@ -41,7 +41,7 @@ export default function TebakSuaraPage() {
         {!isStarted ? (
           <div className="flex flex-col items-center justify-center bg-white p-10 rounded-[36px] shadow-xl border-4 border-sky-100 text-center animate-in fade-in zoom-in duration-500">
             <h2 className="text-3xl md:text-4xl font-black text-sky-950 mb-8">
-              Siap Bermain Tebak Suara? 🗣️
+              Siap Bermain Tebak Suara? 
             </h2>
             <button
               onClick={handleStartGame}

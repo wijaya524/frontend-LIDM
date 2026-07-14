@@ -175,9 +175,7 @@ export const speakInstruction = (text: string, speechRate: number) => {
     // Menyentuh Balon Sub-Items
     "bagus! semua balon sudah meletus!": "/speak/motorik/menyentuh-balon/kamu-hebat-semua-balon-meletus.mp3",
 
-    // Video
-    "video belajar. tonton cerita kognitif atau senam jari!": "/speak/video/selamat-datang-di-menu-video.mp4",
-    "video belajar": "/speak/video/selamat-datang-di-menu-video.mp4",
+
 
     // Mengeja Kata
     "ayo mengeja kata benda!": "/speak/mengeja/selamat-datang-di-menu-eja-kata.mp4",
@@ -186,23 +184,49 @@ export const speakInstruction = (text: string, speechRate: number) => {
     // Kuis Pintar
     "ayo kerjakan kuis bintang pintar! jawab pertanyaan dengan benar.": "/speak/kuis/yuk-mengerjakan-kuis-pintar.mp4",
     "kuis pintar": "/speak/kuis/yuk-mengerjakan-kuis-pintar.mp4",
+    "buah pisang memiliki warna apa ya": "/speak/kuis/buah-pisang-memiliki warna-apa-ya.mp3",
+    "mana gambar yang berbentuk segitiga hijau": "/speak/kuis/gambar-segitiga-hijau-yang-mana-ya.mp3",
+    "berapa jumlah kucing di bawah ini": "/speak/kuis/ada-berapa-jumlah-kucing-dibawah-ini.mp3",
+    "ulangi lagi": "/speak/kuis/ayo-coba-lagi.mp3",
+    "ayo kita mulai kuis kembali!": "/speak/kuis/ayo-kita-mulai-kuis-kembali.mp3",
 
     // Tebak Suara
     "mari tebak suara hewan!": "/speak/tebak-suara/ayo-kita-menebak-suara.mp4",
     "tebak suara": "/speak/tebak-suara/ayo-kita-menebak-suara.mp4",
+    "dengarkan suara berikut, lalu tebak hewan apa ini!": "/speak/tebak-suara/coba-tebak-bunyi-suara-hewan-berikut.mp3",
+    "ayo tebak suara hewan apakah ini!": "/speak/tebak-suara/coba-tebak-bunyi-suara-hewan-berikut.mp3",
+    "hewan apa yang bunyinya seperti ini?": "/speak/tebak-suara/coba-tebak-bunyi-suara-hewan-berikut.mp3",
+    "salah. ayo coba lagi!": "/speak/tebak-suara/ayo-coba-lagi.mp3",
 
     // Tebak Gambar
     "ayo tebak gambar benda!": "/speak/tebak-gambar/tebak-gambar.mp4",
     "tebak gambar": "/speak/tebak-gambar/tebak-gambar.mp4",
+    "pilih gambar yang sesuai dengan tulisan m o b i l": "/speak/tebak-gambar/gambar-mobil-itu-yang-mana.mp3",
+    "tunjuk gambar buah apel!": "/speak/tebak-gambar/gambar-buah-apel-itu-yang-mana.mp3",
+    "mana gambar yang merupakan buku bacaan?": "/speak/tebak-gambar/gambar-buku-itu-yang-mana.mp3",
+    "coba lagi!": "/speak/tebak-suara/ayo-coba-lagi.mp3",
+    "betul!": "/speak/tebak-gambar/kamu-benar.mp3",
   };
 
   // Find matches (prioritizing longer keys to prevent false substring matches)
   let matchedPath = "";
   const sortedKeys = Object.keys(customSpeechMap).sort((a, b) => b.length - a.length);
+  
+  // 1. First check for an exact match to avoid false positive substring matches (e.g. 'coba lagi!' matching 'salah tempat. coba lagi!')
   for (const key of sortedKeys) {
-    if (cleanText.includes(key) || key.includes(cleanText)) {
+    if (cleanText === key) {
       matchedPath = customSpeechMap[key];
       break;
+    }
+  }
+
+  // 2. If no exact match is found, check for partial/substring match
+  if (!matchedPath) {
+    for (const key of sortedKeys) {
+      if (cleanText.includes(key) || key.includes(cleanText)) {
+        matchedPath = customSpeechMap[key];
+        break;
+      }
     }
   }
 
@@ -211,6 +235,10 @@ export const speakInstruction = (text: string, speechRate: number) => {
       const audio = new Audio(matchedPath);
       activeCustomAudio = audio;
       audio.play().catch((err) => {
+        // Ignore AbortError when play() is intentionally interrupted by a pause() call
+        if (err && (err.name === "AbortError" || (err.message && err.message.includes("interrupted")))) {
+          return;
+        }
         console.warn("Failed to play custom speech recording, fallback to default TTS:", err);
         playSpeechSynthesisFallback(text, speechRate);
       });
@@ -223,16 +251,7 @@ export const speakInstruction = (text: string, speechRate: number) => {
   }
 };
 
-// Helper for default speech synthesis
+// Helper for default speech synthesis (Disabled as requested to remove all browser TTS fallbacks)
 const playSpeechSynthesisFallback = (text: string, speechRate: number) => {
-  if (!window.speechSynthesis) return;
-  const utterance = new SpeechSynthesisUtterance(text);
-  const voices = window.speechSynthesis.getVoices();
-  const indonesianVoice = voices.find(
-    (v) => v.lang.startsWith("id") || v.lang.startsWith("ms")
-  );
-  if (indonesianVoice) utterance.voice = indonesianVoice;
-  utterance.lang = "id-ID";
-  utterance.rate = speechRate;
-  window.speechSynthesis.speak(utterance);
+  console.log("Browser TTS disabled: ", text);
 };

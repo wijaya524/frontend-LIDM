@@ -32,6 +32,8 @@ export default function MengejaGame({
   const [activeLetterIdx, setActiveLetterIdx] = useState<number>(-1);
   const [wobbleSpell, setWobbleSpell] = useState<boolean>(false);
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
+  const isSpellingWordActive = useRef<boolean>(false);
+  const activeAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const spellingItems: SpellingItem[] = [
     {
@@ -163,10 +165,61 @@ export default function MengejaGame({
   ];
 
   const clearTimers = () => {
+    isSpellingWordActive.current = false;
+    if (activeAudioRef.current) {
+      activeAudioRef.current.pause();
+      activeAudioRef.current = null;
+    }
     timeoutsRef.current.forEach((t) => clearTimeout(t));
     timeoutsRef.current = [];
     if (typeof window !== "undefined" && window.speechSynthesis) {
       window.speechSynthesis.cancel();
+    }
+  };
+
+  const playAudioFile = (src: string): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      const audio = new Audio(src);
+      activeAudioRef.current = audio;
+      audio.onended = () => {
+        resolve();
+      };
+      audio.onerror = (e) => {
+        reject(e);
+      };
+      audio.play().catch(reject);
+    });
+  };
+
+  const playLetterAudio = async (wordFolder: string, letter: string): Promise<void> => {
+    const cleanLetter = letter.trim();
+    const formats = [
+      `/speak/mengeja/${wordFolder}/${cleanLetter.toUpperCase()}.mp3`,
+      `/speak/mengeja/${wordFolder}/${cleanLetter.toLowerCase()}.mp3`
+    ];
+    
+    for (const src of formats) {
+      try {
+        await playAudioFile(src);
+        return; // Success!
+      } catch (err) {
+        // Silently try next format
+      }
+    }
+    
+    // Disabled browser default fallback
+    await new Promise<void>((resolve) => {
+      resolve();
+    });
+  };
+
+  const playWordAudio = async (word: string): Promise<void> => {
+    const cleanWord = word.trim().toLowerCase();
+    const src = `/speak/mengeja/${cleanWord}/${cleanWord}.mp3`;
+    try {
+      await playAudioFile(src);
+    } catch (err) {
+      console.warn(`Failed to play word audio: ${src}`);
     }
   };
 
@@ -185,52 +238,53 @@ export default function MengejaGame({
     };
   }, [spellIndex]);
 
-  const speakWordAndSpell = (word: string, letters: string[]) => {
-    if (typeof window === "undefined" || !window.speechSynthesis) return;
+  const speakWordAndSpell = async (word: string, letters: string[]) => {
     clearTimers();
-    const synth = window.speechSynthesis;
-    const voices = synth.getVoices();
-    const voice = voices.find((v) => v.lang.startsWith("id") || v.lang.startsWith("ms")) || null;
-
+    isSpellingWordActive.current = true;
     setIsSpellingWord(true);
-    const wordUtterance = new SpeechSynthesisUtterance(word.toLowerCase());
-    if (voice) wordUtterance.voice = voice;
-    wordUtterance.lang = "id-ID";
-    wordUtterance.rate = speechRate + 0.1;
-
-    wordUtterance.onend = () => {
-      let delay = 300;
-      const step = speechRate === 0.4 ? 1100 : 800;
-      letters.forEach((letter, idx) => {
-        const timer = setTimeout(() => {
-          setActiveLetterIdx(idx);
-          const letterUtterance = new SpeechSynthesisUtterance(letter.toLowerCase());
-          if (voice) letterUtterance.voice = voice;
-          letterUtterance.lang = "id-ID";
-          letterUtterance.rate = speechRate - 0.1;
-          synth.speak(letterUtterance);
-
-          if (idx === letters.length - 1) {
-            letterUtterance.onend = () => {
-              const repeatTimer = setTimeout(() => {
-                setActiveLetterIdx(-1);
-                const repeatUtterance = new SpeechSynthesisUtterance(word.toLowerCase());
-                if (voice) repeatUtterance.voice = voice;
-                repeatUtterance.lang = "id-ID";
-                repeatUtterance.rate = speechRate + 0.1;
-                repeatUtterance.onend = () => {
-                  setIsSpellingWord(false);
-                };
-                synth.speak(repeatUtterance);
-              }, 500);
-              timeoutsRef.current.push(repeatTimer);
-            };
-          }
-        }, delay + idx * step);
-        timeoutsRef.current.push(timer);
+    
+    const cleanWord = word.trim().toLowerCase();
+    
+    try {
+      // 1. Play full word
+      await playWordAudio(cleanWord);
+      
+      // Delay before spelling starts
+      await new Promise<void>(resolve => {
+        const t = setTimeout(resolve, 400);
+        timeoutsRef.current.push(t);
       });
-    };
-    synth.speak(wordUtterance);
+      
+      // 2. Play letters one by one
+      for (let idx = 0; idx < letters.length; idx++) {
+        if (!isSpellingWordActive.current) break; // Check if canceled
+        setActiveLetterIdx(idx);
+        await playLetterAudio(cleanWord, letters[idx]);
+        
+        // Delay between letters
+        await new Promise<void>(resolve => {
+          const t = setTimeout(resolve, 300);
+          timeoutsRef.current.push(t);
+        });
+      }
+      
+      // Delay before repeating full word
+      await new Promise<void>(resolve => {
+        const t = setTimeout(resolve, 400);
+        timeoutsRef.current.push(t);
+      });
+      
+      // 3. Play full word again
+      if (isSpellingWordActive.current) {
+        setActiveLetterIdx(-1);
+        await playWordAudio(cleanWord);
+      }
+    } catch (e) {
+      console.error("Error during spelling playback sequence:", e);
+    } finally {
+      setIsSpellingWord(false);
+      setActiveLetterIdx(-1);
+    }
   };
 
   const handleSpellNext = () => {

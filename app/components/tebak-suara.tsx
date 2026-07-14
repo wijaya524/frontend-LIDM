@@ -8,6 +8,7 @@ import { Volume2 } from "lucide-react";
 import { playSynthSound, speakInstruction } from "../utils/audio";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface TebakSuaraProps {
   speechRate: number;
@@ -125,11 +126,18 @@ export default function TebakSuaraGame({
       setSoundSuccess(true);
       setSoundFeedback("HEBAT! Jawabanmu benar! ⭐️");
       speakInstruction("Benar! Hebat!", speechRate);
+      toast.success("HEBAT! Jawabanmu benar! ⭐️", {
+        className: "font-fredoka text-lg font-bold rounded-2xl border-2 border-emerald-200 bg-emerald-50 text-emerald-700 shadow-md",
+        duration: 2000
+      });
     } else {
       playSynthSound("wrong");
       setSoundSuccess(false);
-      setSoundFeedback("Bukan suara itu. Coba lagi! 💪");
       speakInstruction("Salah. Ayo coba lagi!", speechRate);
+      toast.error("Bukan suara itu. Coba lagi! 💪", {
+        className: "font-fredoka text-lg font-bold rounded-2xl border-2 border-red-200 bg-red-50 text-red-700 shadow-md",
+        duration: 2000
+      });
       if (incrementWrongAnswers) incrementWrongAnswers();
     }
 
@@ -140,7 +148,7 @@ export default function TebakSuaraGame({
         } else {
           onComplete();
           playSynthSound("victory");
-          speakInstruction("Hore! Tebak suara selesai!", speechRate);
+    
           onBackToMenu();
         }
       } else {
@@ -205,14 +213,6 @@ export default function TebakSuaraGame({
           ))}
         </div>
       </div>
-
-      {soundFeedback && (
-        <div className={`p-4 rounded-2xl text-center w-full text-xl font-black border-2 ${
-          soundSuccess ? "bg-emerald-50 border-emerald-300 text-emerald-700 animate-bounce" : "bg-red-50 border-red-300 text-red-700"
-        }`}>
-          {soundFeedback}
-        </div>
-      )}
     </div>
   );
 }

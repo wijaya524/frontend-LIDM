@@ -18,6 +18,12 @@ export default function WarnaGame({
   trackTaskAction
 }: WarnaProps) {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const textColorMap: Record<string, string> = {
+    MERAH: "text-red-500",
+    KUNING: "text-amber-500",
+    BIRU: "text-blue-500",
+    HIJAU: "text-green-600",
+  };
 
   return (
     <div className="w-full max-w-2xl flex flex-col items-center py-6 select-none">
@@ -65,7 +71,7 @@ export default function WarnaGame({
 
       {selectedColor ? (
         <div className="text-center p-4 bg-sky-50 rounded-2xl border border-sky-100 animate-bounce">
-          <span className="text-4xl font-black tracking-widest text-sky-900 uppercase">
+          <span className={`text-4xl font-black tracking-widest uppercase ${textColorMap[selectedColor] || "text-sky-900"}`}>
             {selectedColor}
           </span>
         </div>

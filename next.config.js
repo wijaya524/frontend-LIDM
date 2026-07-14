@@ -32,15 +32,6 @@ const nextConfig = {
         source: "/bermain/motorik/:path*",
         destination: "/motorik/:path*",
       },
-      // Rewrite video
-      {
-        source: "/bermain/video",
-        destination: "/video",
-      },
-      {
-        source: "/bermain/video/:path*",
-        destination: "/video/:path*",
-      },
       // Rewrite mengeja
       {
         source: "/bermain/mengeja",

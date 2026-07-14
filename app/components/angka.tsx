@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { playSynthSound, speakInstruction } from "../utils/audio";
 import { Button } from "@/components/ui/button";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 interface AngkaProps {
   speechRate: number;
@@ -25,11 +26,11 @@ export default function AngkaGame({
     { num: 1, label: "SATU", tts: "Satu", emoji: "🍎", count: 1, image: "/icons/berhitung/satu.webp" },
     { num: 2, label: "DUA", tts: "Dua", emoji: "🍌", count: 2, image: "/icons/berhitung/dua.webp" },
     { num: 3, label: "TIGA", tts: "Tiga", emoji: "🍊", count: 3, image: "/icons/berhitung/tiga.webp" },
-    { num: 4, label: "EMPAT", tts: "Empat", emoji: "🍓", count: 4, image: "/icons/berhitung/empat.webp" },
+    { num: 4, label: "EMPAT", tts: "Empat", emoji: "🍓", count: 4, image: "/icons/berhitung/empat1.webp" },
     { num: 5, label: "LIMA", tts: "Lima", emoji: "🍉", count: 5, image: "/icons/berhitung/lima.webp" },
-    { num: 6, label: "ENAM", tts: "Enam", emoji: "🍇", count: 6, image: "/icons/berhitung/enam.webp" },
-    { num: 7, label: "TUJUH", tts: "Tujuh", emoji: "🍒", count: 7, image: "/icons/berhitung/tujuh.webp" },
-    { num: 8, label: "DELAPAN", tts: "Delapan", emoji: "🍍", count: 8, image: "/icons/berhitung/delapan.webp" },
+    { num: 6, label: "ENAM", tts: "Enam", emoji: "🍇", count: 6, image: "/icons/berhitung/enam1.webp" },
+    { num: 7, label: "TUJUH", tts: "Tujuh", emoji: "🍒", count: 7, image: "/icons/berhitung/tujuh1.webp" },
+    { num: 8, label: "DELAPAN", tts: "Delapan", emoji: "🍍", count: 8, image: "/icons/berhitung/delapan1.webp" },
     { num: 9, label: "SEMBILAN", tts: "Sembilan", emoji: "🥭", count: 9, image: "/icons/berhitung/sembilan.webp" },
     { num: 10, label: "SEPULUH", tts: "Sepuluh", emoji: "🥑", count: 10, image: "/icons/berhitung/sepuluh.webp" },
   ];
@@ -56,9 +57,7 @@ export default function AngkaGame({
 
   return (
     <div className="w-full max-w-3xl flex flex-col items-center select-none py-6">
-      <h3 className="text-3xl md:text-4xl font-black text-sky-950 mb-8 text-center">Ketuk untuk Belajar Berhitung! 🔢</h3>
-
-      {/* Gambar Ilustrasi Jumlah Benda di Atas Angka */}
+      <h3 className="text-3xl md:text-4xl font-black text-sky-950 mb-8 text-center">Ketuk untuk Mengenal Angka</h3>
       <div className="w-full max-w-sm h-56 relative border-4 border-sky-100 rounded-3xl overflow-hidden bg-white shadow-md mb-8 flex items-center justify-center">
         {selectedNumber !== null ? (
           <div className="w-full h-full relative p-4 flex flex-col items-center justify-center">
@@ -123,7 +122,7 @@ export default function AngkaGame({
             }}
             className="btn-tactile py-4 px-8 bg-sky-500 hover:bg-sky-600 text-white rounded-full text-xl font-extrabold cursor-pointer h-auto border-b-4 border-sky-700 shadow-md"
           >
-            Lanjut 6 - 10 ➡️
+            Lanjut 6 - 10  <ArrowRight className="w-6 h-6 stroke-3" />
           </Button>
         ) : (
           <Button
@@ -135,7 +134,7 @@ export default function AngkaGame({
             }}
             className="btn-tactile py-4 px-8 bg-sky-500 hover:bg-sky-600 text-white rounded-full text-xl font-extrabold cursor-pointer h-auto border-b-4 border-sky-700 shadow-md"
           >
-            ⬅️ Kembali 1 - 5
+             <ArrowLeft className="w-6 h-6 stroke-3" /> Kembali 1 - 5
           </Button>
         )}
       </div>

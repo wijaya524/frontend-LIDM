@@ -3,6 +3,7 @@ import { Trophy } from "lucide-react";
 import { playSynthSound, speakInstruction } from "../utils/audio";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { toast } from "sonner";
 import kucing from '@/public/icons/kuis/kucing.webp'
 import pisang from '@/public/icons/kuis/pisang.webp'
 import round from '@/public/icons/kuis/round.svg'
@@ -40,26 +41,39 @@ export default function KuisGame({
       setQuizScore((prev) => prev + 1);
       setQuizFeedback({ isCorrect: true, message: "HEBAT! Pilihanmu benar! ⭐️" });
       speakInstruction("Benar!", speechRate);
+      toast.success("HEBAT! Pilihanmu benar! ⭐️", {
+        className: "font-fredoka text-lg font-bold rounded-2xl border-2 border-emerald-200 bg-emerald-50 text-emerald-700 shadow-md",
+        duration: 2000
+      });
+
+      const timer = setTimeout(() => {
+        setQuizFeedback(null);
+        if (quizStep < 3) {
+          setQuizStep((prev) => prev + 1);
+          if (quizStep === 1) speakInstruction("Mana gambar yang berbentuk segitiga hijau?", speechRate);
+          if (quizStep === 2) speakInstruction("Berapa jumlah kucing di bawah ini?", speechRate);
+        } else {
+          setQuizFinished(true);
+          onComplete();
+          speakInstruction("Selesai! Kamu luar biasa!", speechRate);
+        }
+      }, 2500);
+      timeoutsRef.current.push(timer);
     } else {
       playSynthSound("wrong");
       setQuizFeedback({ isCorrect: false, message: "Ayo coba lagi! Kamu pasti bisa! 💪" });
       speakInstruction("Ulangi lagi.", speechRate);
+      toast.error("Ayo coba lagi! Kamu pasti bisa! 💪", {
+        className: "font-fredoka text-lg font-bold rounded-2xl border-2 border-red-200 bg-red-50 text-red-700 shadow-md",
+        duration: 2000
+      });
       if (incrementWrongAnswers) incrementWrongAnswers();
-    }
 
-    const timer = setTimeout(() => {
-      setQuizFeedback(null);
-      if (quizStep < 3) {
-        setQuizStep((prev) => prev + 1);
-        if (quizStep === 1) speakInstruction("Mana gambar yang berbentuk segitiga hijau?", speechRate);
-        if (quizStep === 2) speakInstruction("Berapa jumlah kucing di bawah ini?", speechRate);
-      } else {
-        setQuizFinished(true);
-        onComplete();
-        speakInstruction("Selesai! Kamu luar biasa!", speechRate);
-      }
-    }, 2500);
-    timeoutsRef.current.push(timer);
+      const timer = setTimeout(() => {
+        setQuizFeedback(null);
+      }, 2500);
+      timeoutsRef.current.push(timer);
+    }
   };
 
   useEffect(() => {
@@ -69,10 +83,11 @@ export default function KuisGame({
   }, [quizStep, startNewTask]);
 
   useEffect(() => {
+    speakInstruction("Buah Pisang memiliki warna apa ya?", speechRate);
     return () => {
       timeoutsRef.current.forEach((t) => clearTimeout(t));
     };
-  }, []);
+  }, [speechRate]);
 
   return (
     <div className="w-full max-w-2xl flex flex-col items-center py-6 select-none">
@@ -201,13 +216,6 @@ export default function KuisGame({
                   3
                 </Button>
               </div>
-            </div>
-          )}
-
-          {quizFeedback && (
-            <div className={`mt-6 p-4 rounded-2xl text-center w-full text-xl font-black border-2 ${quizFeedback.isCorrect ? "bg-emerald-50 border-emerald-300 text-emerald-700 animate-bounce" : "bg-red-50 border-red-300 text-red-700"
-              }`}>
-              {quizFeedback.message}
             </div>
           )}
         </div>

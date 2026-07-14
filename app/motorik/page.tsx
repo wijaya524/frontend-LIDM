@@ -24,23 +24,29 @@ export default function MotorikSubmenuPage() {
       title: "Menjiplak Garis",
       icon: "✏️",
       color: "bg-sky-100",
-      tts: "Silakan bantu kupu-kupu hinggap di bunga dengan menjiplak garis",
+      tts: "",
+      cardCollor: "bg-sky-400",
+      Border: "border-sky-200",
     },
     {
       href: "/bermain/motorik/menyentuh-balon",
       key: "menyentuh",
       title: "Menyentuh Balon",
       icon: "🎈",
-      color: "bg-pink-100",
-      tts: "Mulai memecahkan balon-balon",
+      color: "bg-rose-100",
+      tts: "",
+      cardCollor: "bg-rose-400",
+      Border: "bg-rose-200",
     },
     {
       href: "/bermain/motorik/memilah-sampah",
       key: "menyeret",
       title: "Memilah Sampah",
       icon: "🗑️",
-      color: "bg-green-100",
-      tts: "Buang sampah pada tempatnya",
+      color: "bg-indigo-100",
+      tts: "",
+      cardCollor: "bg-indigo-400",
+      Border: "bg-indigo-200",
     },
   ];
 
@@ -87,14 +93,14 @@ export default function MotorikSubmenuPage() {
                 }}
               >
                 <Card
-                  className="
+                  className={`
                     cursor-pointer
                     rounded-3xl
                     border-4
-                    border-sky-100
-                    bg-white
+                    ${item.Border}
+                    ${item.cardCollor}
                     shadow-md
-                  "
+                  `}
                 >
                   <CardContent className="flex items-center justify-between p-6">
                     <div className="flex items-center gap-5">
@@ -105,11 +111,11 @@ export default function MotorikSubmenuPage() {
                       </div>
 
                       <div>
-                        <h3 className="text-3xl font-black text-slate-800">
+                        <h3 className="text-3xl font-black text-white">
                           {item.title}
                         </h3>
 
-                        <p className="text-base text-slate-500">
+                        <p className="text-base text-white">
                           Ketuk untuk mulai
                         </p>
                       </div>

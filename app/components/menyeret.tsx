@@ -5,6 +5,7 @@ import { RotateCcw } from "lucide-react";
 import { playSynthSound, speakInstruction } from "../utils/audio";
 import { Button } from "@/components/ui/button";
 import { useRef } from "react";
+import { toast } from "sonner";
 
 interface MenyeretProps {
   speechRate: number;
@@ -58,12 +59,20 @@ export default function MenyeretGame({ speechRate, onComplete, startNewTask, tra
 
       setDragSuccessMessage("Benar! Sampah masuk tong!");
       speakInstruction("Benar!", speechRate);
+      toast.success("Benar! Sampah masuk tong! ⭐️", {
+        className: "font-fredoka text-lg font-bold rounded-2xl border-2 border-emerald-200 bg-emerald-50 text-emerald-700 shadow-md",
+        duration: 2000
+      });
 
       startNewTask?.();
     } else {
       playSynthSound("wrong");
       setDragSuccessMessage("Salah tempat. Ulangi!");
       speakInstruction("Salah tempat. Coba lagi!", speechRate);
+      toast.error("Salah tempat. Ulangi! 💪", {
+        className: "font-fredoka text-lg font-bold rounded-2xl border-2 border-red-200 bg-red-50 text-red-700 shadow-md",
+        duration: 2000
+      });
     }
 
     setDraggedItem(null);
@@ -175,16 +184,6 @@ export default function MenyeretGame({ speechRate, onComplete, startNewTask, tra
 
         </div>
       </div>
-
-      {/* PESAN UMPAN BALIK (FEEDBACK) */}
-      {dragSuccessMessage && (
-        <div className={`p-4 border-4 rounded-2xl text-center w-full ${dragSuccessMessage.includes("Benar")
-            ? "bg-green-50 border-green-200 text-green-800"
-            : "bg-red-50 border-red-200 text-red-800"
-          }`}>
-          <p className="text-xl font-black">{dragSuccessMessage}</p>
-        </div>
-      )}
 
       {/* TOMBOL ULANGI */}
       {basketStatus.organik.length > 0 && basketStatus.anorganik.length > 0 && (
