@@ -101,7 +101,6 @@ export default function TebakGambarGame({
           onComplete();
           playSynthSound("victory");
           speakInstruction("Hebat! Tebak gambar selesai!", speechRate);
-          onBackToMenu();
         }
       } else {
         setSelectedImageAnswer(null);
@@ -114,11 +113,11 @@ export default function TebakGambarGame({
 
   return (
     <div className="w-full max-w-2xl flex flex-col items-center py-6 select-none">
-      <h3 className="text-3xl font-black text-sky-950 mb-2 text-center">Permainan Tebak Gambar! </h3>
-      <p className="text-lg font-bold text-slate-500 mb-6 text-center">Tunjuk gambar yang cocok dengan tulisan</p>
+      <h3 className="text-3xl font-black text-sky-950 dark:text-sky-100 mb-2 text-center">Permainan Tebak Gambar! </h3>
+      <p className="text-lg font-bold text-slate-500 dark:text-slate-400 mb-6 text-center">Tunjuk gambar yang cocok dengan tulisan</p>
 
-      <div className="flex flex-col items-center bg-slate-50 border-2 border-slate-100 rounded-3xl p-6 w-full mb-6">
-        <div className="text-5xl font-black text-sky-900 tracking-wider bg-white px-6 py-3 rounded-2xl border-2 border-slate-100 mb-6 shadow-inner">
+      <div className="flex flex-col items-center bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-3xl p-6 w-full mb-6">
+        <div className="text-5xl font-black text-sky-900 dark:text-sky-100 tracking-wider bg-white dark:bg-slate-800 px-6 py-3 rounded-2xl border-2 border-slate-100 dark:border-slate-750 mb-6 shadow-inner">
           {imageQuestions[imageQuestionIndex].targetWord}
         </div>
 
@@ -129,15 +128,15 @@ export default function TebakGambarGame({
               onClick={() => handleImageAnswer(opt)}
               disabled={selectedImageAnswer !== null}
               variant="ghost"
-              className={`btn-tactile p-4 border-4 rounded-3xl flex flex-col items-center gap-3 min-h-80 w-full h-auto cursor-pointer transition-all duration-300 hover:bg-slate-100/50 ${
+              className={`btn-tactile p-4 border-4 rounded-3xl flex flex-col items-center gap-3 min-h-80 w-full h-auto cursor-pointer transition-all duration-300 ${
                 selectedImageAnswer === opt
                   ? opt === imageQuestions[imageQuestionIndex].correctAnswer
-                    ? "bg-emerald-50 border-emerald-400"
-                    : "bg-red-50 border-red-400"
-                  : "bg-white border-slate-200 hover:bg-slate-50"
+                    ? "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-400 dark:border-emerald-900"
+                    : "bg-red-50 dark:bg-red-950/20 border-red-400 dark:border-red-900"
+                  : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700"
               }`}
             >
-              <div className="relative w-full h-48 rounded-2xl overflow-hidden bg-white">
+              <div className="relative w-full h-48 rounded-2xl overflow-hidden bg-white dark:bg-slate-800">
                 <Image
                   src={
                     imageQuestions[imageQuestionIndex].illustrations[opt] || ""
@@ -148,7 +147,7 @@ export default function TebakGambarGame({
                 />
               </div>
 
-              <span className="text-xl font-black text-slate-700 text-center block">
+              <span className="text-xl font-black text-slate-700 dark:text-slate-200 text-center block">
                 {opt}
               </span>
             </Button>

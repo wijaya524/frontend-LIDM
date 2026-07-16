@@ -64,10 +64,10 @@ export default function MenyentuhGame({ speechRate, onComplete, startNewTask, tr
 
   return (
     <div className="w-full max-w-2xl flex flex-col items-center relative overflow-hidden py-6 select-none">
-      <h3 className="text-3xl font-black text-sky-950 mb-2 text-center">Ketuk dan Pecahkan Balon! 🎈</h3>
-      <p className="text-lg font-bold text-slate-500 mb-4 text-center">Pecahkan 5 balon untuk menang!</p>
+      <h3 className="text-3xl font-black text-sky-950 dark:text-sky-100 mb-2 text-center">Ketuk dan Pecahkan Balon! 🎈</h3>
+      <p className="text-lg font-bold text-slate-500 dark:text-slate-400 mb-4 text-center">Pecahkan 5 balon untuk menang!</p>
 
-      <div className="relative border-4 border-dashed border-sky-200 rounded-3xl bg-sky-50/20 w-full h-80 overflow-hidden shadow-inner">
+      <div className="relative border-4 border-dashed border-sky-200 dark:border-slate-800 rounded-3xl bg-sky-50/20 dark:bg-slate-900/30 w-full h-80 overflow-hidden shadow-inner">
         {balloons.map((b) => (
           <Button
             key={b.id}
@@ -89,10 +89,10 @@ export default function MenyentuhGame({ speechRate, onComplete, startNewTask, tr
         ))}
 
         {balloonScore >= 5 && (
-          <div className="absolute inset-0 bg-white/95 flex flex-col items-center justify-center p-6 text-center ">
+          <div className="absolute inset-0 bg-white/95 dark:bg-slate-900/95 flex flex-col items-center justify-center p-6 text-center ">
             <Trophy className="w-20 h-20 text-amber-500 fill-amber-200 mb-3 animate-pulse" />
-            <span className="text-4xl font-black text-sky-950 mb-2">Kamu Juara! 🌟</span>
-            <p className="text-xl font-bold text-slate-600 mb-6">Semua balon sudah dipecahkan!</p>
+            <span className="text-4xl font-black text-sky-950 dark:text-sky-100 mb-2">Kamu Juara! 🌟</span>
+            <p className="text-xl font-bold text-slate-600 dark:text-slate-350 mb-6">Semua balon sudah dipecahkan!</p>
             <Button
               onClick={() => {
                 playSynthSound("bubble");
@@ -108,7 +108,7 @@ export default function MenyentuhGame({ speechRate, onComplete, startNewTask, tr
       </div>
 
       {balloonScore < 5 && (
-        <div className="mt-4 text-2xl font-black text-sky-800">
+        <div className="mt-4 text-2xl font-black text-sky-800 dark:text-sky-400">
           Balon Pecah: {balloonScore} / 5
         </div>
       )}

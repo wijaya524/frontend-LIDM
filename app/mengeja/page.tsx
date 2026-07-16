@@ -11,7 +11,7 @@ import MengejaGame from "../components/mengeja";
 import ActivityStartScreen from "../components/ActivityStartScreen";
 
 export default function MengejaPage() {
-  const { speechRate, markActivityCompleted, speak } = useLearning();
+  const { speechRate, markActivityCompleted, speak, stopSpeaking } = useLearning();
   const router = useRouter();
   
   const {
@@ -27,11 +27,12 @@ export default function MengejaPage() {
   }, [speak]);
 
   const handleStartGame = () => {
+    stopSpeaking();
     startActivity();
   };
 
   return (
-    <main className="flex-1 flex flex-col min-h-screen bg-sky-50 select-none pb-12 w-full">
+    <main className="flex-1 flex flex-col min-h-screen bg-sky-50 dark:bg-slate-950 select-none pb-12 w-full">
       <Header />
       <BackButton href="/bermain" />
 
@@ -44,7 +45,7 @@ export default function MengejaPage() {
         ) : (
           <MengejaGame
             speechRate={speechRate}
-            onComplete={() => markActivityCompleted("mengeja")}
+            onComplete={() => markActivityCompleted("mengeja", "/bermain")}
             onBackToMenu={() => {
               router.push("/bermain");
             }}

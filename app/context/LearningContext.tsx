@@ -2,7 +2,8 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
-import { playSynthSound, speakInstruction } from "../utils/audio";
+import { usePathname } from "next/navigation";
+import { playSynthSound, speakInstruction, stopSpeaking as stopSpeakingUtil } from "../utils/audio";
 import { registerUser, updateUser } from "../utils/api";
 import { Button } from "../../components/ui/button";
 import {
@@ -21,16 +22,21 @@ interface LearningContextType {
   childAvatar: "panda" | "kelinci" | "beruang";
   setChildAvatar: (avatar: "panda" | "kelinci" | "beruang") => void;
   completedActivities: Record<string, boolean>;
-  markActivityCompleted: (key: string) => void;
+  markActivityCompleted: (key: string, redirectPath?: string) => void;
+  resetActivities: () => void;
   speechRate: number;
   setSpeechRate: (rate: number) => void;
   playSynth: (type: "bubble" | "victory" | "wobble" | "pop" | "wrong" | "meow" | "bark" | "elephant") => void;
   speak: (text: string) => void;
+  stopSpeaking: () => void;
+  backsound: string;
+  setBacksound: (sound: string) => void;
 }
 
 const LearningContext = createContext<LearningContextType | undefined>(undefined);
 
 export function LearningProvider({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
   const [userId, setUserId] = useState<string>("");
   const [childName, setChildName] = useState<string>("");
   const [childAvatar, setChildAvatar] = useState<"panda" | "kelinci" | "beruang">("panda");
@@ -48,13 +54,24 @@ export function LearningProvider({ children }: { children: React.ReactNode }) {
     kuis: false,
   });
 
+  const [backsound, setBacksoundState] = useState<string>("Playful-Mood-backsound");
+  const backsoundAudioRef = React.useRef<HTMLAudioElement | null>(null);
+
   // Celebration modal states
   const [showCelebration, setShowCelebration] = useState(false);
   const [celebrationTitle, setCelebrationTitle] = useState("");
+  const [celebrationRedirect, setCelebrationRedirect] = useState<string>("");
 
   // Load from localStorage
   useEffect(() => {
     if (typeof window !== "undefined") {
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+
       const savedName = localStorage.getItem("childName") || "";
       if (savedName) setChildName(savedName);
 
@@ -69,6 +86,9 @@ export function LearningProvider({ children }: { children: React.ReactNode }) {
           console.error("Failed to parse progress", e);
         }
       }
+
+      const savedBacksound = localStorage.getItem("backsound") || "Playful-Mood-backsound";
+      setBacksoundState(savedBacksound);
 
       // Check and sync user ID with backend database
       const savedUserId = localStorage.getItem("userId");
@@ -89,7 +109,73 @@ export function LearningProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const markActivityCompleted = useCallback((key: string) => {
+  const setBacksound = useCallback((sound: string) => {
+    setBacksoundState(sound);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("backsound", sound);
+    }
+  }, []);
+
+  // Backsound playback manager
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Stop previous audio
+      if (backsoundAudioRef.current) {
+        backsoundAudioRef.current.pause();
+        backsoundAudioRef.current = null;
+      }
+
+      // Check if we are on a play menu/game page where backsound should be stopped
+      const gamePrefixes = [
+        "/kognitif",
+        "/motorik",
+        "/mengeja",
+        "/kuis",
+        "/tebak-suara",
+        "/tebak-gambar",
+        "/bermain/kognitif",
+        "/bermain/motorik",
+        "/bermain/mengeja",
+        "/bermain/kuis",
+        "/bermain/tebak-suara",
+        "/bermain/tebak-gambar"
+      ];
+      const isGamePage = gamePrefixes.some(prefix => pathname?.startsWith(prefix));
+
+      if (backsound && backsound !== "none" && !isGamePage) {
+        const audio = new Audio(`/backsound/${backsound}.mp3`);
+        audio.loop = true;
+        audio.volume = 0.03; // Keep it very soft so it's a quiet backsound
+        backsoundAudioRef.current = audio;
+
+        // Try autoplaying
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((err) => {
+            console.log("Autoplay blocked, waiting for user click:", err);
+          });
+        }
+
+        // Add user click listener to resume if autoplay is blocked
+        const startOnInteraction = () => {
+          if (backsoundAudioRef.current && backsoundAudioRef.current.paused) {
+            backsoundAudioRef.current.play().catch((err) => {
+              console.log("Audio play failed on interaction:", err);
+            });
+          }
+          window.removeEventListener("click", startOnInteraction);
+        };
+        window.addEventListener("click", startOnInteraction);
+
+        return () => {
+          window.removeEventListener("click", startOnInteraction);
+          audio.pause();
+        };
+      }
+    }
+  }, [backsound, pathname]);
+
+  const markActivityCompleted = useCallback((key: string, redirectPath?: string) => {
     // Define which activities are allowed to show the Trophy and play applause
     const allowedCelebrationKeys = [
       "menjiplak",
@@ -114,6 +200,7 @@ export function LearningProvider({ children }: { children: React.ReactNode }) {
 
       const name = activityNames[key] || "Aktivitas";
       setCelebrationTitle(name);
+      setCelebrationRedirect(redirectPath || "");
       setShowCelebration(true);
 
       // Play custom applause audio file
@@ -144,6 +231,23 @@ export function LearningProvider({ children }: { children: React.ReactNode }) {
 
       return updated;
     });
+  }, []);
+
+  const resetActivities = useCallback(() => {
+    const fresh = {
+      warna: false,
+      bentuk: false,
+      angka: false,
+      menjiplak: false,
+      menyentuh: false,
+      menyeret: false,
+      mengeja: false,
+      "tebak-suara": false,
+      "tebak-gambar": false,
+      kuis: false,
+    };
+    setCompletedActivities(fresh);
+    localStorage.setItem("completedActivities", JSON.stringify(fresh));
   }, []);
 
   const playSynth = (type: "bubble" | "victory" | "wobble" | "pop" | "wrong" | "meow" | "bark" | "elephant") => {
@@ -186,19 +290,23 @@ export function LearningProvider({ children }: { children: React.ReactNode }) {
         },
         completedActivities,
         markActivityCompleted,
+        resetActivities,
         speechRate,
         setSpeechRate: (rate) => {
           setSpeechRate(rate);
           localStorage.setItem("speechRate", rate.toString());
         },
         playSynth,
-        speak
+        speak,
+        stopSpeaking: () => stopSpeakingUtil(),
+        backsound,
+        setBacksound
       }}
     >
       {children}
 
       <Dialog open={showCelebration} onOpenChange={setShowCelebration}>
-        <DialogContent className="max-w-md bg-white border-4 border-amber-300 rounded-[36px] p-6 flex flex-col items-center text-center shadow-2xl overflow-hidden select-none outline-none">
+        <DialogContent className="max-w-md bg-white  border-4 border-amber-300 rounded-[36px] p-6 flex flex-col items-center text-center shadow-2xl overflow-hidden select-none outline-none">
           <DialogHeader className="flex flex-col items-center">
             <DialogTitle className="text-4xl font-black text-amber-600 mb-1 tracking-wide uppercase drop-shadow-xs  mt-2">
               LUAR BIASA! 🎉
@@ -217,15 +325,18 @@ export function LearningProvider({ children }: { children: React.ReactNode }) {
             />
           </div>
 
-          <DialogFooter className="w-full">
+          <DialogFooter className="w-full bg-amber-50">
             <Button
               onClick={() => {
                 playSynthSound("bubble");
                 setShowCelebration(false);
+                if (celebrationRedirect) {
+                  window.location.href = celebrationRedirect;
+                }
               }}
               className="btn-tactile w-full py-5 px-6 bg-amber-500 hover:bg-amber-600 text-white rounded-2xl text-xl font-black cursor-pointer shadow-md h-auto border-b-4 border-amber-700 transition-all active:scale-95"
             >
-              HEBAT! OKE 
+              OKE 
             </Button>
           </DialogFooter>
         </DialogContent>

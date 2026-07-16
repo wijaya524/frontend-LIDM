@@ -12,9 +12,9 @@ interface StartScreenProps {
 
 export default function ActivityStartScreen({ title, onStart }: StartScreenProps) {
   return (
-    <Card className="flex flex-col items-center justify-center bg-white p-10 rounded-[36px] shadow-xl border-4 border-sky-100 text-center animate-in fade-in zoom-in duration-500 w-full max-w-xl mx-auto my-12">
+    <Card className="flex flex-col items-center justify-center  dark:bg-[#FDCB4A] bg-[#FDCB4A] dark:border-[#f7df0a] p-10 rounded-[36px] shadow-xl border-4 border-sky-100  text-center animate-in fade-in zoom-in duration-500 w-full max-w-xl mx-auto my-12">
       <h2 className="text-3xl md:text-4xl font-black text-sky-950 mb-8 leading-snug">
-        {title} 🎮
+        {title} 
       </h2>
       <Button
         onClick={onStart}

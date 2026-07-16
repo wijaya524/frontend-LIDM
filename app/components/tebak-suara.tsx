@@ -148,8 +148,6 @@ export default function TebakSuaraGame({
         } else {
           onComplete();
           playSynthSound("victory");
-    
-          onBackToMenu();
         }
       } else {
         setSelectedSoundAnswer(null);
@@ -163,8 +161,8 @@ export default function TebakSuaraGame({
 
   return (
     <div className="w-full max-w-2xl flex flex-col items-center py-6 select-none">
-      <h3 className="text-3xl font-black text-sky-950 mb-2 text-center">Permainan Tebak Suara! </h3>
-      <p className="text-lg font-bold text-slate-500 mb-6 text-center">Bunyi suara hewan apakah ini?</p>
+      <h3 className="text-3xl font-black text-sky-950 dark:text-sky-100 mb-2 text-center">Permainan Tebak Suara! </h3>
+      <p className="text-lg font-bold text-slate-500 dark:text-slate-400 mb-6 text-center">Bunyi suara hewan apakah ini?</p>
 
       <div className="flex flex-col items-center   rounded-3xl p-6 w-full mb-6">
         <Button
@@ -175,10 +173,10 @@ export default function TebakSuaraGame({
           }}
           disabled={isPlaying}
           variant="ghost"
-          className={`btn-tactile p-6 rounded-full cursor-pointer shadow-lg mb-6 transition-all flex items-center justify-center w-28 h-28 h-auto shrink-0 ${
+          className={`btn-tactile p-6 rounded-full cursor-pointer shadow-lg mb-6 transition-all flex items-center justify-center w-28 h-28 shrink-0 ${
             isPlaying 
               ? "bg-amber-400 text-amber-950 scale-95" 
-              : "bg-indigo-500 hover:bg-indigo-600 text-white pulse-action"
+              : "bg-indigo-500 hover:bg-indigo-600 dark:hover:bg-indigo-600 text-white pulse-action"
           }`}
           aria-label="Bunyikan Suara Soal"
         >
@@ -192,15 +190,15 @@ export default function TebakSuaraGame({
               onClick={() => handleSoundAnswer(opt)}
               disabled={selectedSoundAnswer !== null}
               variant="ghost"
-              className={`btn-tactile p-4 border-4 rounded-3xl flex flex-col items-center gap-3 min-h-64 w-full h-auto cursor-pointer transition-all duration-300 hover:bg-slate-100/50 ${
+              className={`btn-tactile p-4 border-4 rounded-3xl flex flex-col items-center gap-3 min-h-64 w-full h-auto cursor-pointer transition-all duration-300 ${
                 selectedSoundAnswer === opt
                   ? opt === soundQuestions[soundQuestionIndex].correctAnswer
-                    ? "bg-emerald-50 border-emerald-400 text-emerald-700 scale-105"
-                    : "bg-red-50 border-red-400 text-red-700"
-                  : "bg-white border-slate-200 text-slate-800 hover:bg-slate-50"
+                    ? "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-400 dark:border-emerald-900 text-emerald-700 dark:text-emerald-300 scale-105"
+                    : "bg-red-50 dark:bg-red-950/20 border-red-400 dark:border-red-900 text-red-700 dark:text-red-300"
+                  : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700"
               }`}
             >
-              <div className="relative w-full h-36 rounded-2xl overflow-hidden bg-white flex items-center justify-center p-2 border-2 border-slate-100 shadow-sm">
+              <div className="relative w-full h-36 rounded-2xl overflow-hidden bg-white dark:bg-slate-800 flex items-center justify-center p-2 border-2 border-slate-100 dark:border-slate-750 shadow-sm">
                 <Image
                   src={`/icons/tebak-suara/${opt.toLowerCase()}.webp`}
                   alt={opt}
@@ -208,7 +206,7 @@ export default function TebakSuaraGame({
                   className="object-contain"
                 />
               </div>
-              <span className="text-2xl font-black text-slate-700">{opt}</span>
+              <span className="text-2xl font-black text-slate-700 dark:text-slate-200">{opt}</span>
             </Button>
           ))}
         </div>

@@ -10,7 +10,7 @@ import TebakSuaraGame from "../components/tebak-suara";
 import { Play } from "lucide-react"; // Pastikan Anda sudah mengimpor ikon ini
 
 export default function TebakSuaraPage() {
-  const { speechRate, markActivityCompleted, speak } = useLearning();
+  const { speechRate, markActivityCompleted, speak, stopSpeaking } = useLearning();
   const router = useRouter();
   
   const {
@@ -28,18 +28,19 @@ export default function TebakSuaraPage() {
 
   // Fungsi ini dipanggil saat anak menyentuh layar
   const handleStartGame = () => {
+    stopSpeaking();
     startActivity(); // Ganti state untuk memunculkan game
   };
 
   return (
-    <main className="flex-1 flex flex-col min-h-screen bg-sky-50 select-none pb-12 w-full">
+    <main className="flex-1 flex flex-col min-h-screen bg-sky-50 dark:bg-slate-950 select-none pb-12 w-full">
       <Header />
       <BackButton href="/bermain"  />
 
       <section className="flex-1 flex flex-col items-center justify-center px-4 md:px-8 w-full max-w-5xl mx-auto h-full mt-10">
     
         {!isStarted ? (
-          <div className="flex flex-col items-center justify-center bg-white p-10 rounded-[36px] shadow-xl border-4 border-sky-100 text-center animate-in fade-in zoom-in duration-500">
+          <div className="flex flex-col items-center justify-center dark:bg-[#FDCB4A] bg-[#FDCB4A] dark:border-[#f7df0a]  p-10 rounded-[36px] shadow-xl border-4 border-sky-100 text-center animate-in fade-in zoom-in duration-500">
             <h2 className="text-3xl md:text-4xl font-black text-sky-950 mb-8">
               Siap Bermain Tebak Suara? 
             </h2>
@@ -56,9 +57,9 @@ export default function TebakSuaraPage() {
           
           <TebakSuaraGame
             speechRate={speechRate}
-            onComplete={() => markActivityCompleted("tebak-suara")}
+            onComplete={() => markActivityCompleted("tebak-suara", "/bermain/tebak-suara")}
             onBackToMenu={() => {
-              router.push("/bermain");
+              window.location.href = "/bermain/tebak-suara";
             }}
             incrementWrongAnswers={incrementWrongAnswers}
             incrementHints={incrementHints}

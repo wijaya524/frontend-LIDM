@@ -137,6 +137,7 @@ export const speakInstruction = (text: string, speechRate: number) => {
     "lingkaran": "/speak/kognitif/mengenal-bentuk/lingkaran.mp3",
     "persegi": "/speak/kognitif/mengenal-bentuk/persegi.mp3",
     "segitiga": "/speak/kognitif/mengenal-bentuk/segitiga.mp3",
+    "trapesium": "/speak/kognitif/mengenal-bentuk/trapesium.mp3",
 
     // Menghitung Angka Sub-Items
     "lanjut ke angka enam sampai sepuluh": "/speak/kognitif/menghitung-angka/yuk-lanjut-angka-6-sampai-10.mp3",
@@ -254,4 +255,20 @@ export const speakInstruction = (text: string, speechRate: number) => {
 // Helper for default speech synthesis (Disabled as requested to remove all browser TTS fallbacks)
 const playSpeechSynthesisFallback = (text: string, speechRate: number) => {
   console.log("Browser TTS disabled: ", text);
+};
+
+export const stopSpeaking = () => {
+  if (typeof window === "undefined") return;
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+  }
+  if (activeCustomAudio) {
+    try {
+      activeCustomAudio.pause();
+      activeCustomAudio.currentTime = 0;
+    } catch (e) {
+      console.warn("Failed to stop custom audio:", e);
+    }
+    activeCustomAudio = null;
+  }
 };

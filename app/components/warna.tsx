@@ -27,7 +27,7 @@ export default function WarnaGame({
 
   return (
     <div className="w-full max-w-2xl flex flex-col items-center py-6 select-none">
-      <h3 className="text-3xl font-black text-sky-950 mb-6 text-center">Ketuk untuk Mengenal Warna! 🎨</h3>
+      <h3 className="text-3xl font-black text-sky-950 dark:text-sky-100 mb-6 text-center">Ketuk untuk Mengenal Warna! 🎨</h3>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full mb-8">
         {[
@@ -62,7 +62,7 @@ export default function WarnaGame({
               onComplete();
             }}
             variant="default"
-            className={`btn-tactile h-32 rounded-3xl border-4 cursor-pointer transition-all duration-300 ${c.color} ${selectedColor === c.name ? "ring-8 ring-sky-200 scale-105" : ""
+            className={`btn-tactile h-32 rounded-3xl border-4 cursor-pointer transition-all duration-300 ${c.color} ${selectedColor === c.name ? "ring-8 ring-sky-200 dark:ring-sky-950 scale-105" : ""
               }`}
             aria-label={`Pilih warna ${c.tts}`}
           />
@@ -70,13 +70,13 @@ export default function WarnaGame({
       </div>
 
       {selectedColor ? (
-        <div className="text-center p-4 bg-sky-50 rounded-2xl border border-sky-100 animate-bounce">
-          <span className={`text-4xl font-black tracking-widest uppercase ${textColorMap[selectedColor] || "text-sky-900"}`}>
+        <div className="text-center p-4 bg-sky-50 dark:bg-slate-900 rounded-2xl border border-sky-100 dark:border-slate-800 animate-bounce">
+          <span className={`text-4xl font-black tracking-widest uppercase ${textColorMap[selectedColor] || "text-sky-900 dark:text-sky-100"}`}>
             {selectedColor}
           </span>
         </div>
       ) : (
-        <p className="text-xl font-bold text-slate-400">Pilih salah satu kotak di atas!</p>
+        <p className="text-xl font-bold text-slate-400 dark:text-slate-500">Pilih salah satu kotak di atas!</p>
       )}
     </div>
   );

@@ -296,7 +296,6 @@ export default function MengejaGame({
       clearTimers();
       onComplete();
       playSynthSound("victory");
-      onBackToMenu();
     }
   };
 
@@ -322,16 +321,16 @@ export default function MengejaGame({
 
   return (
     <div className="w-full max-w-2xl flex flex-col items-center py-6 select-none">
-      <h3 className="text-3xl font-black text-sky-950 mb-2 text-center">Ayo Mengeja Kata! </h3>
+      <h3 className="text-3xl font-black text-sky-950 dark:text-sky-100 mb-2 text-center">Ayo Mengeja Kata! </h3>
       
-      <div className="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl p-6 flex flex-col items-center relative overflow-hidden my-4">
-        <div className="absolute top-2 right-4 text-lg font-black text-slate-500">
+      <div className="w-full bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-3xl p-6 flex flex-col items-center relative overflow-hidden my-4">
+        <div className="absolute top-2 right-4 text-lg font-black text-slate-500 dark:text-slate-400">
           {spellIndex + 1} / {spellingItems.length}
         </div>
 
         <div
           onClick={handleSpellerClick}
-          className={`btn-tactile bg-sky-50/50 hover:bg-sky-50 border-4 border-dashed border-sky-200 rounded-2xl p-4 mb-6 cursor-pointer flex items-center justify-center transition-all h-auto w-auto hover:scale-[1.02] active:scale-[0.98] ${
+          className={`btn-tactile bg-sky-50/50 hover:bg-sky-50 dark:bg-slate-800 border-4 border-dashed border-sky-200 dark:border-sky-700 rounded-2xl p-4 mb-6 cursor-pointer flex items-center justify-center transition-all h-auto w-auto hover:scale-[1.02] active:scale-[0.98] ${
             wobbleSpell ? "animate-bounce" : ""
           }`}
           aria-label="Ketuk gambar untuk mendengar suara mengeja"
@@ -340,12 +339,12 @@ export default function MengejaGame({
         </div>
 
         <div className="flex items-center justify-center gap-4 w-full">
-          <div className="flex flex-wrap items-center justify-center gap-2 text-4xl md:text-5xl font-black tracking-wide text-slate-800 bg-white px-5 py-3 rounded-2xl border-2 border-slate-100 shadow-inner">
+          <div className="flex flex-wrap items-center justify-center gap-2 text-4xl md:text-5xl font-black tracking-wide text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800 px-5 py-3 rounded-2xl border-2 border-slate-100 dark:border-slate-750 shadow-inner">
             {spellingItems[spellIndex].letters.map((letter, idx) => (
               <span
                 key={idx}
                 className={`transition-all ${
-                  activeLetterIdx === idx ? "letter-active text-emerald-500" : "text-slate-800"
+                  activeLetterIdx === idx ? "letter-active text-emerald-500 dark:text-emerald-400" : "text-slate-800 dark:text-slate-100"
                 }`}
               >
                 {letter}
@@ -361,7 +360,7 @@ export default function MengejaGame({
               if (incrementHints) incrementHints();
             }}
             variant="ghost"
-            className={`btn-tactile p-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full cursor-pointer shadow-lg focus:outline-none flex items-center justify-center w-16 h-16 shrink-0 ${
+            className={`btn-tactile p-4 bg-emerald-500 hover:bg-emerald-600 dark:hover:bg-emerald-600 text-white rounded-full cursor-pointer shadow-lg focus:outline-none flex items-center justify-center w-16 h-16 shrink-0 ${
               !isSpellingWord ? "pulse-action" : "bg-emerald-600 scale-95"
             }`}
             aria-label="Eja Kata"
@@ -375,14 +374,14 @@ export default function MengejaGame({
         <Button
           onClick={handleSpellBack}
           variant="ghost"
-          className="btn-tactile flex-1 py-5 px-6 bg-slate-300 hover:bg-slate-400 text-slate-800 rounded-2xl text-xl font-extrabold flex items-center justify-center gap-2 cursor-pointer h-auto border-b-4 border-slate-400"
+          className="btn-tactile flex-1 py-5 px-6 bg-slate-300 hover:bg-slate-400 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-2xl text-xl font-extrabold flex items-center justify-center gap-2 cursor-pointer h-auto border-b-4 border-slate-400 dark:border-slate-900"
         >
           <ArrowLeft className="w-6 h-6 stroke-[3]" /> KEMBALI
         </Button>
         <Button
           onClick={handleSpellNext}
           variant="ghost"
-          className="btn-tactile flex-1 py-5 px-6 bg-amber-500 hover:bg-amber-600 text-white rounded-2xl text-xl font-extrabold flex items-center justify-center gap-2 cursor-pointer shadow-md h-auto border-b-4 border-amber-600"
+          className="btn-tactile flex-1 py-5 px-6 bg-amber-500 hover:bg-amber-600 dark:hover:bg-amber-600 text-white rounded-2xl text-xl font-extrabold flex items-center justify-center gap-2 cursor-pointer shadow-md h-auto border-b-4 border-amber-600"
         >
           LANJUT <ArrowRight className="w-6 h-6 stroke-[3] animate-pulse" />
         </Button>

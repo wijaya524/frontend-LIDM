@@ -20,7 +20,7 @@ export default function BackButton({ href, label = "KEMBALI", ttsText }: BackBut
       <Button
         variant="outline"
         nativeButton={false}
-        className="btn-tactile py-3 px-4 sm:py-5 sm:px-6 bg-[#4A90E2] border-4 border-[#3B7FCE] hover:bg-[#5BA0F2] hover:text-white text-white rounded-2xl text-lg sm:text-xl font-black flex items-center gap-2 cursor-pointer shadow-md select-none h-auto"
+        className="btn-tactile py-3 px-4 sm:py-5 sm:px-6 dark:bg-[#4A90E2] dark:hover:bg-[#5BA0F2] bg-[#4A90E2] border-4 border-[#3B7FCE] hover:bg-[#5BA0F2] hover:text-white text-white rounded-2xl text-lg sm:text-xl font-black flex items-center gap-2 cursor-pointer shadow-md select-none h-auto"
         render={
           <Link
             href={href}

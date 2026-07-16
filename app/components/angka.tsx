@@ -57,12 +57,12 @@ export default function AngkaGame({
 
   return (
     <div className="w-full max-w-3xl flex flex-col items-center select-none py-6">
-      <h3 className="text-3xl md:text-4xl font-black text-sky-950 mb-8 text-center">Ketuk untuk Mengenal Angka</h3>
-      <div className="w-full max-w-sm h-56 relative border-4 border-sky-100 rounded-3xl overflow-hidden bg-white shadow-md mb-8 flex items-center justify-center">
+      <h3 className="text-3xl md:text-4xl font-black text-sky-950 dark:text-sky-100 mb-8 text-center">Ketuk untuk Mengenal Angka</h3>
+      <div className="w-full max-w-lg h-80 relative border-4 border-sky-100 dark:border-slate-800 rounded-3xl overflow-hidden bg-white dark:bg-slate-900 shadow-md mb-8 flex items-center justify-center">
         {selectedNumber !== null ? (
-          <div className="w-full h-full relative p-4 flex flex-col items-center justify-center">
+          <div className="w-full h-full relative p-6 flex flex-col items-center justify-center">
             {/* Display the image */}
-            <div className="w-full h-36 relative">
+            <div className="w-full h-56 relative">
               <Image
                 src={numbersData.find(x => x.num === selectedNumber)?.image || ""}
                 alt={`Ilustrasi ${selectedNumber}`}
@@ -71,14 +71,14 @@ export default function AngkaGame({
               />
             </div>
             {/* Label below the image inside the frame */}
-            <span className="text-xl font-black text-sky-950 mt-2 animate-bounce">
+            <span className="text-2xl font-black text-sky-950 dark:text-sky-100 mt-3 animate-bounce">
               {selectedNumber} = {numbersData.find(x => x.num === selectedNumber)?.label}
             </span>
           </div>
         ) : (
           <div className="text-center p-6 flex flex-col items-center justify-center gap-2">
-            <span className="text-5xl animate-pulse">✨</span>
-            <p className="text-lg font-bold text-slate-400">Pilih angka di bawah untuk melihat gambar benda! 🌟</p>
+            <span className="text-6xl animate-pulse">✨</span>
+            <p className="text-xl font-bold text-slate-400 dark:text-slate-500">Pilih angka di bawah untuk melihat gambar benda! 🌟</p>
           </div>
         )}
       </div>
@@ -100,7 +100,7 @@ export default function AngkaGame({
                 onComplete();
               }}
               className={`w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 flex items-center justify-center text-4xl sm:text-5xl font-black cursor-pointer transition-all duration-300 hover:scale-110 active:scale-95 ${colorClass} ${
-                isSelected ? "ring-8 ring-sky-200 scale-105" : ""
+                isSelected ? "ring-8 ring-sky-200 dark:ring-sky-950 scale-105" : ""
               }`}
               aria-label={`Angka ${n.num}`}
             >

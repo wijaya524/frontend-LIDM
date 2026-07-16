@@ -14,6 +14,10 @@ const nextConfig = {
         source: "/pencapaian",
         destination: "/",
       },
+      {
+        source: "/setting",
+        destination: "/",
+      },
       // Rewrite kognitif
       {
         source: "/bermain/kognitif",

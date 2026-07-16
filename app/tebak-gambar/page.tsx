@@ -11,7 +11,7 @@ import TebakGambarGame from "../components/tebak-gambar";
 import ActivityStartScreen from "../components/ActivityStartScreen";
 
 export default function TebakGambarPage() {
-  const { speechRate, markActivityCompleted, speak } = useLearning();
+  const { speechRate, markActivityCompleted, speak, stopSpeaking } = useLearning();
   const router = useRouter();
   
   const {
@@ -27,11 +27,12 @@ export default function TebakGambarPage() {
   }, [speak]);
 
   const handleStartGame = () => {
+    stopSpeaking();
     startActivity();
   };
 
   return (
-    <main className="flex-1 flex flex-col min-h-screen bg-sky-50 select-none pb-12 w-full">
+    <main className="flex-1 flex flex-col min-h-screen bg-sky-50 dark:bg-slate-950 select-none pb-12 w-full">
       <Header />
       <BackButton href="/bermain"  />
 
@@ -44,9 +45,9 @@ export default function TebakGambarPage() {
         ) : (
           <TebakGambarGame
             speechRate={speechRate}
-            onComplete={() => markActivityCompleted("tebak-gambar")}
+            onComplete={() => markActivityCompleted("tebak-gambar", "/bermain/tebak-gambar")}
             onBackToMenu={() => {
-              router.push("/bermain");
+              window.location.href = "/bermain/tebak-gambar";
             }}
             incrementWrongAnswers={incrementWrongAnswers}
             startNewTask={startNewTask}

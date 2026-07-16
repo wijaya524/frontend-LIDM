@@ -42,11 +42,12 @@ export default function MenjiplakGame({ speechRate, onComplete, trackTaskAction 
   };
 
   const drawTrack = (ctx: CanvasRenderingContext2D, w: number, h: number) => {
+    const isDark = typeof window !== "undefined" && document.documentElement.classList.contains("dark");
     ctx.clearRect(0, 0, w, h);
     ctx.beginPath();
     ctx.moveTo(60, h / 2);
     ctx.lineTo(w - 60, h / 2);
-    ctx.strokeStyle = "#F1F5F9";
+    ctx.strokeStyle = isDark ? "#1e293b" : "#F1F5F9";
     ctx.lineWidth = 32;
     ctx.lineCap = "round";
     ctx.stroke();
@@ -54,7 +55,7 @@ export default function MenjiplakGame({ speechRate, onComplete, trackTaskAction 
     ctx.beginPath();
     ctx.moveTo(60, h / 2);
     ctx.lineTo(w - 60, h / 2);
-    ctx.strokeStyle = "#CBD5E1";
+    ctx.strokeStyle = isDark ? "#475569" : "#CBD5E1";
     ctx.lineWidth = 4;
     ctx.setLineDash([8, 8]);
     ctx.lineCap = "round";
@@ -154,12 +155,12 @@ export default function MenjiplakGame({ speechRate, onComplete, trackTaskAction 
 
   return (
     <div className="w-full max-w-2xl flex flex-col items-center py-6 select-none">
-      <h3 className="text-3xl font-black text-sky-950 mb-2 text-center">Bantu Kupu-kupu Hinggap di Bunga! 🦋</h3>
-      <p className="text-lg font-bold text-slate-500 mb-4 text-center">Seret jari/mouse mengikuti garis abu-abu</p>
+      <h3 className="text-3xl font-black text-sky-950 dark:text-sky-100 mb-2 text-center">Bantu Kupu-kupu Hinggap di Bunga! 🦋</h3>
+      <p className="text-lg font-bold text-slate-500 dark:text-slate-400 mb-4 text-center">Seret jari/mouse mengikuti garis abu-abu</p>
       
-      <div className="relative border-4 border-dashed border-sky-200 rounded-3xl overflow-hidden bg-sky-50/20 w-full h-64 md:h-72 shadow-inner">
+      <div className="relative border-4 border-dashed border-sky-200 dark:border-slate-800 rounded-3xl overflow-hidden bg-sky-50/20 dark:bg-slate-900/30 w-full h-64 md:h-72 shadow-inner">
         {traceCompleted ? (
-          <div className="absolute inset-0 bg-white flex flex-col items-center justify-center p-4 animate-in zoom-in duration-500">
+          <div className="absolute inset-0 bg-white dark:bg-slate-900 flex flex-col items-center justify-center p-4 animate-in zoom-in duration-500">
             <div className="relative w-full h-44 sm:h-52">
               <Image
                 src="/icons/menjiplak/kupu hinggap ke bunga.webp"
@@ -183,7 +184,7 @@ export default function MenjiplakGame({ speechRate, onComplete, trackTaskAction 
               className="absolute inset-0 w-full h-full cursor-crosshair touch-none"
             />
 
-            <div className="absolute top-1/2 -translate-y-1/2 left-2 pointer-events-none select-none w-16 h-16 bg-white/95 p-1.5 rounded-full border-4 border-purple-200 shadow-md">
+            <div className="absolute top-1/2 -translate-y-1/2 left-2 pointer-events-none select-none w-16 h-16 bg-white/95 dark:bg-slate-800 p-1.5 rounded-full border-4 border-purple-200 dark:border-purple-900 shadow-md">
               <div className="w-full h-full relative">
                 <Image
                   src="/icons/menjiplak/butterfly.webp"
@@ -193,7 +194,7 @@ export default function MenjiplakGame({ speechRate, onComplete, trackTaskAction 
                 />
               </div>
             </div>
-            <div className="absolute top-1/2 -translate-y-1/2 right-2 pointer-events-none select-none w-16 h-16 bg-white/95 p-1.5 rounded-full border-4 border-emerald-200 shadow-md">
+            <div className="absolute top-1/2 -translate-y-1/2 right-2 pointer-events-none select-none w-16 h-16 bg-white/95 dark:bg-slate-800 p-1.5 rounded-full border-4 border-emerald-200 dark:border-emerald-900 shadow-md">
               <div className="w-full h-full relative">
                 <Image
                   src="/icons/menjiplak/flower.webp"

@@ -26,7 +26,7 @@ export default function KognitifSubmenuPage() {
       title: "Mengenal Warna",
       icon: "🎨",
       tts: "",
-      cardCollor: "bg-cyan-400",
+      cardColor: "bg-gradient-to-r from-cyan-400 to-sky-500",
       Border: "border-cyan-200",
       iconBackground: "bg-cyan-100"
     },
@@ -36,7 +36,7 @@ export default function KognitifSubmenuPage() {
       title: "Mengenal Bentuk",
       icon: "📐",
       tts: "",
-      cardCollor: "bg-emerald-400",
+      cardColor: "bg-gradient-to-r from-emerald-400 to-green-500",
       Border: "border-emerald-200",
        iconBackground: "bg-emerald-100"
     },
@@ -46,14 +46,14 @@ export default function KognitifSubmenuPage() {
       title: "Mengenal Angka",
       icon: "🔢",
       tts: "",
-      cardCollor: "bg-violet-500",
+      cardColor: "bg-gradient-to-r from-violet-500 to-purple-600",
       Border: "border-violet-200",
-       iconBackground: "bg-violet-100"
+      iconBackground: "bg-violet-100"
     },
   ];
 
   return (
-    <main className="flex-1 flex flex-col min-h-screen bg-sky-50 pb-12">
+    <main className="flex-1 flex flex-col min-h-screen bg-sky-50 dark:bg-slate-950 pb-12">
       <Header />
       <BackButton href="/bermain" />
       <motion.section
@@ -67,7 +67,7 @@ export default function KognitifSubmenuPage() {
       >
 
 
-        <h2 className="text-4xl font-black text-sky-950 mb-8 text-center">
+        <h2 className="text-4xl font-black text-sky-950 dark:text-sky-100 mb-8 text-center">
           Latihan Kognitif
         </h2>
 
@@ -110,7 +110,7 @@ export default function KognitifSubmenuPage() {
     rounded-3xl
     border-4
     ${item.Border}
-    ${item.cardCollor}
+    ${item.cardColor}
     shadow-md
     
                   `}
@@ -152,7 +152,7 @@ export default function KognitifSubmenuPage() {
                       </motion.span>
                     ) : (
                       <span className="text-3xl">
-                        ➜
+                        
                       </span>
                     )}
 

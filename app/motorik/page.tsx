@@ -7,6 +7,7 @@ import Header from "../components/Header";
 import BackButton from "../components/BackButton";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
+import Image from "next/image";
 
 export default function MotorikSubmenuPage() {
   const { playSynth, speak, completedActivities } = useLearning();
@@ -25,7 +26,7 @@ export default function MotorikSubmenuPage() {
       icon: "✏️",
       color: "bg-sky-100",
       tts: "",
-      cardCollor: "bg-sky-400",
+      cardColor: "bg-gradient-to-r from-sky-400 to-cyan-500",
       Border: "border-sky-200",
     },
     {
@@ -35,7 +36,7 @@ export default function MotorikSubmenuPage() {
       icon: "🎈",
       color: "bg-rose-100",
       tts: "",
-      cardCollor: "bg-rose-400",
+      cardColor: "bg-gradient-to-r from-pink-400 to-rose-500",
       Border: "bg-rose-200",
     },
     {
@@ -45,13 +46,13 @@ export default function MotorikSubmenuPage() {
       icon: "🗑️",
       color: "bg-indigo-100",
       tts: "",
-      cardCollor: "bg-indigo-400",
+      cardColor: "bg-gradient-to-r from-indigo-400 to-violet-500",
       Border: "bg-indigo-200",
     },
   ];
 
   return (
-    <main className="flex-1 flex flex-col min-h-screen bg-sky-50 pb-12">
+    <main className="flex-1 flex flex-col min-h-screen bg-sky-50 dark:bg-slate-950 pb-12">
       <Header />
       <BackButton href="/bermain" />
 
@@ -64,7 +65,7 @@ export default function MotorikSubmenuPage() {
           ease: "easeOut",
         }}
       >
-        <h2 className="text-4xl font-black text-sky-950 mb-8 text-center">
+        <h2 className="text-4xl font-black text-sky-950 dark:text-sky-100 mb-8 text-center">
           Latihan Motorik
         </h2>
 
@@ -98,7 +99,7 @@ export default function MotorikSubmenuPage() {
                     rounded-3xl
                     border-4
                     ${item.Border}
-                    ${item.cardCollor}
+                    ${item.cardColor}
                     shadow-md
                   `}
                 >
@@ -134,11 +135,17 @@ export default function MotorikSubmenuPage() {
                           ease: "easeInOut",
                         }}
                       >
-                        ⭐
+                        <Image
+                          src="/star.svg"
+                          alt="Bintang"
+                          width={42}
+                          height={42}
+                          priority
+                        />
                       </motion.span>
                     ) : (
                       <span className="text-3xl text-slate-400">
-                        ➜
+                        
                       </span>
                     )}
                   </CardContent>
